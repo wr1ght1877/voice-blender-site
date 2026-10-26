@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice Blender: Summon your whole team of bots in one call.</title>
+  <meta name="description" content="Voice Blender: summon your whole team of bots in one call. They take turns, you stay in charge.">
+  <meta name="theme-color" content="#02040d">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Voice Blender">
+  <meta property="og:description" content="Summon your whole team of bots in one call.">
+  <meta property="og:image" content="https://wr1ght1877.github.io/voice-blender-site/assets/banner.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@VoiceBlender">
+  <meta name="twitter:image" content="https://wr1ght1877.github.io/voice-blender-site/assets/banner.jpg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="wordmark" href="#top" aria-label="Voice Blender home">
+      <span class="wm-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      Voice&nbsp;Blender
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+    <nav id="nav-links" class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#bots">Bots</a>
+      <a href="#pricing">Pricing</a>
+      <a class="nav-cta" href="#waitlist">Join waitlist</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-label="Voice Blender">
+      <canvas id="vortex" aria-hidden="true"></canvas>
+      <div class="hero-copy">
+        <p class="eyebrow">Voice Blender</p>
+        <h1>Summon your whole team of bots in one call.</h1>
+        <p class="sub">Talk once. Your bots take turns answering. You stay in charge.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#waitlist">Join the waitlist</a>
+          <a class="btn ghost" href="#how">How it works</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li><span class="num">1</span><h3>Start a call</h3><p>Open one call and just talk, like you would to a teammate.</p></li>
+        <li><span class="num">2</span><h3>Summon your bots</h3><p>Bring in the bots you need. Each one joins on its own colored line.</p></li>
+        <li><span class="num">3</span><h3>They take turns</h3><p>No talking over each other. Every answer is labeled with who said it, and you stay in charge.</p></li>
+      </ol>
+    </section>
+
+    <section id="bots" class="section">
+      <h2>Meet the team</h2>
+      <p class="lede">Five bots, five colors. Each one keeps its color everywhere: its line, its face, its captions.</p>
+      <div class="bots">
+        <article class="bot" style="--c:#2f8bff"><canvas class="mascot" data-bot="0" width="120" height="120" aria-hidden="true"></canvas><h3>M&amp;M</h3><p>Blue · round ball</p></article>
+        <article class="bot" style="--c:#ff3dc8"><canvas class="mascot" data-bot="1" width="120" height="120" aria-hidden="true"></canvas><h3>Hollywood</h3><p>Magenta · four-point star</p></article>
+        <article class="bot" style="--c:#2ee86f"><canvas class="mascot" data-bot="2" width="120" height="120" aria-hidden="true"></canvas><h3>Scalper</h3><p>Green · rounded square</p></article>
+        <article class="bot" style="--c:#ffa424"><canvas class="mascot" data-bot="3" width="120" height="120" aria-hidden="true"></canvas><h3>Ledger</h3><p>Orange · rounded diamond</p></article>
+        <article class="bot" style="--c:#9b5cff"><canvas class="mascot" data-bot="4" width="120" height="120" aria-hidden="true"></canvas><h3>Grok Bot</h3><p>Violet · cloud</p></article>
+      </div>
+    </section>
+
+    <section id="pricing" class="section">
+      <h2>Pricing <span class="soon">Coming soon</span></h2>
+      <div class="plans">
+        <article class="plan"><h3>Yap</h3><p class="price">Free</p><ul><li>1 bot per call</li><li>Standard queue</li></ul></article>
+        <article class="plan featured"><span class="tag">Most popular</span><h3>Chorus</h3><p class="price">$20<span>/mo</span></p><ul><li>3 bots per call</li><li>Blender + turn-taking</li></ul></article>
+        <article class="plan"><h3>Symphony</h3><p class="price">$50<span>/mo</span></p><ul><li>Unlimited bots</li><li>Priority queue</li><li>Attribution proof</li></ul></article>
+      </div>
+      <p class="fine">Plans aren't available yet. Pricing may change before launch.</p>
+    </section>
+
+    <section id="waitlist" class="section waitlist">
+      <h2>Join the waitlist</h2>
+      <p class="lede">The waitlist opens soon. Follow <a href="https://x.com/VoiceBlender" rel="noopener">@VoiceBlender</a> on X to hear first.</p>
+      <button class="btn primary" type="button" disabled aria-disabled="true">Waitlist opening soon</button>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Voice Blender · Patent pending</p>
+    <a href="https://x.com/VoiceBlender" rel="noopener">@VoiceBlender on X</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
