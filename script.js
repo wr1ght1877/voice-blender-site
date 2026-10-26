@@ -140,5 +140,34 @@
     catch (e) { hero.classList.remove('mode-2d'); hero.classList.add('mode-static'); VB.heroMode = 'static'; }
     if (window.console && why) console.info('Voice Blender hero: 2D fallback (' + why + ')');
   };
-  setTimeout(function () { if (!VB.heroMode) VB.useFallback('3D did not start'); }, 6000);
+  var root = document.documentElement;
+  function heroWatchdog() { setTimeout(function () { if (!VB.heroMode) VB.useFallback('3D did not start'); }, 6000); }
+
+  /* Switch from the 3D tour to the plain page (skip link, or if the tour can't start). */
+  VB.toPlain = function (why, remember) {
+    if (remember) { try { localStorage.setItem('vb-plain', '1'); } catch (e) {} }
+    if (root.classList.contains('plain')) return;
+    if (VB.tourStop) { try { VB.tourStop(); } catch (e) {} }
+    root.classList.remove('tour'); root.classList.add('plain');
+    window.scrollTo(0, 0);
+    if (why && window.console) console.info('Voice Blender: plain page (' + why + ')');
+    if (!VB.reduceMotion && VB.startHero3d) VB.startHero3d(); else if (!VB.heroMode) VB.useFallback(VB.reduceMotion ? 'reduced motion' : 'no 3D');
+    heroWatchdog();
+  };
+  var skip = document.getElementById('tour-skip');
+  if (skip) skip.addEventListener('click', function (e) { e.preventDefault(); VB.toPlain('skipped the tour', true); var m = document.getElementById('main'); if (m) { m.setAttribute('tabindex', '-1'); m.focus({ preventScroll: true }); } });
+  var take = document.getElementById('tour-take');
+  if (take) take.addEventListener('click', function () { try { localStorage.removeItem('vb-plain'); } catch (e) {} });
+
+  /* In tour mode, nav links to tour sections fly the camera to that point in the journey. */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || !root.classList.contains('tour') || !VB.tourGo) return;
+    var id = a.getAttribute('href').slice(1);
+    if (id === 'top') id = 'start';
+    if (VB.tourGo(id)) e.preventDefault();
+  });
+
+  if (root.classList.contains('plain')) heroWatchdog();
+  else setTimeout(function () { if (!VB.tourReady && root.classList.contains('tour')) VB.toPlain('3D tour did not start'); }, 9000);
 })();

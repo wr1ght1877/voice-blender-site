@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Voice Blender: Summon your whole team of bots in one call.</title>
-  <meta name="description" content="Voice Blender lets several AI bots share one live voice call. Call a bot by name, it answers in its own voice, and the bots take turns so nobody talks over you.">
+  <meta name="description" content="Voice Blender: summon your whole team of personal bots into one live voice call. Call a bot by name, it answers in its own voice, and the bots take turns so nobody talks over you.">
   <meta name="theme-color" content="#070a1f">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -18,7 +18,19 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js" crossorigin>
   <link rel="stylesheet" href="style.css">
-  <script>document.documentElement.className += ' js';</script>
+  <script>
+    /* Pick the experience before first paint: 3D tour, or the plain page for reduced motion / no WebGL / opt-out. */
+    (function () {
+      var d = document.documentElement, plain = false, gl = false, q = location.search;
+      try { var c = document.createElement('canvas'); gl = !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) {}
+      var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      try { if (localStorage.getItem('vb-plain') === '1') plain = true; } catch (e) {}
+      if (/[?&]plain\b/.test(q) || location.hash === '#plain') plain = true;
+      if (/[?&]tour\b/.test(q)) plain = false;
+      if (!gl || rm) plain = true;
+      d.className += ' js ' + (plain ? 'plain' : 'tour') + (gl ? ' has-webgl' : '') + (gl && !rm ? ' can-tour' : '');
+    })();
+  </script>
   <script type="importmap">
   {
     "imports": {
@@ -30,6 +42,9 @@
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
+
+  <a class="tour-skip" id="tour-skip" href="?plain">Skip the 3D tour</a>
+  <a class="tour-take" id="tour-take" href="?tour">Take the 3D tour</a>
 
   <header class="nav" id="nav">
     <a class="wordmark" href="#top" aria-label="Voice Blender, back to top">
@@ -60,6 +75,7 @@
       <div class="hero-copy">
         <p class="eyebrow"><span class="dot"></span> Voice Blender · Coming soon</p>
         <h1 id="hero-title">Summon your whole team of bots in one call.</h1>
+        <p class="tagline">Stay in control of your team with one voice.</p>
         <p class="sub">Call a bot by name and it answers in its own voice. The bots take turns, so nobody talks over each other or over you.</p>
         <div class="ctas">
           <a class="btn primary" href="#what">See what it is</a>
@@ -67,17 +83,159 @@
         </div>
       </div>
       <a class="scroll-cue" href="#what" aria-label="Scroll to What is Voice Blender"><span></span></a>
+      <p class="tour-cue" aria-hidden="true"><span class="mouse"><i></i></span>Scroll to step inside</p>
     </section>
+    <!-- 3D TOUR (visual only; the same content is in the plain sections below for screen readers and search) -->
+    <div id="tour" class="tour-wrap" aria-hidden="true">
+      <div class="tour-stage">
+        <div id="tour-gl" class="tour-gl"></div>
+        <div id="tour-css" class="tour-css"></div>
+        <div class="tour-flash"></div>
+      </div>
+      <div id="tour-cards" class="tour-cards">
+        <!-- tunnel -->
+        <div class="tc tc-word" data-z="-34" data-w="1100" data-theme="dark"><p>Step inside the call.</p></div>
+
+        <!-- what is (bright) -->
+        <div class="tc tc-head" data-z="-86" data-w="760" data-y="1.4" data-theme="light">
+          <p class="tk">What is Voice Blender?</p>
+          <h2>One live call. Your whole bot team. Every bot with its own voice.</h2>
+        </div>
+        <div class="tc tc-glass" data-z="-97" data-x="-1" data-y="0.6" data-w="420" data-theme="light">
+          <span class="tc-num" style="--c:var(--blue)">01</span>
+          <p class="tc-big">Voice Blender lets several AI bots take part in <b>one live voice conversation</b>.</p>
+        </div>
+        <div class="tc tc-glass" data-z="-106" data-x="1" data-y="-0.4" data-w="420" data-theme="light">
+          <span class="tc-num" style="--c:var(--magenta)">02</span>
+          <p class="tc-big">You call a bot by name, like <b>“Hey Grok Bot”</b>, and that bot’s reply is spoken in its own dedicated voice.</p>
+        </div>
+        <div class="tc tc-glass" data-z="-116" data-x="-1" data-y="-0.2" data-w="440" data-theme="light">
+          <span class="tc-num" style="--c:var(--green)">03</span>
+          <p class="tc-big">A <b>turn-taking mixer</b> blends the bots’ voices so they don’t talk over each other or over you.</p>
+          <p>It listens for acoustic cues like pauses and pitch drops, not just text signals, to decide when someone has finished speaking.</p>
+        </div>
+        <div class="tc tc-glass tc-mock" data-z="-127" data-x="1" data-y="0.3" data-w="440" data-theme="light">
+          <div class="tc-mock-head"><span class="live"><i></i> Live call</span><span class="cm-note">Illustration</span></div>
+          <ol class="tc-caps">
+            <li class="you"><b>You</b> Hey Grok Bot, help me plan my week.</li>
+            <li style="--c:var(--violet)"><b>Grok Bot</b> Sure. What’s on your list?</li>
+            <li class="you"><b>You</b> M&amp;M, what do you think of this idea?</li>
+            <li style="--c:var(--blue)"><b>M&amp;M</b> Here’s what I’d add.</li>
+          </ol>
+          <p class="tc-small">One bot speaks at a time. Captions keep each bot’s color.</p>
+        </div>
+        <div class="tc tc-chips" data-z="-138" data-y="-0.6" data-w="640" data-theme="light">
+          <span style="--c:var(--blue)">Wake words</span><span style="--c:var(--magenta)">A voice per bot</span><span style="--c:var(--green)">Turn-taking mixer</span>
+        </div>
+
+        <!-- how it works (dark room) -->
+        <div class="tc tc-head" data-z="-170" data-w="720" data-y="1.6" data-theme="dark">
+          <p class="tk">How it works</p>
+          <h2>Talk once. The right bot answers.</h2>
+        </div>
+        <div class="tc tc-glass tc-step" data-z="-180" data-x="-1" data-w="400" data-theme="dark" style="--c:var(--blue)">
+          <span class="tc-num">01</span><h3>Start a call</h3><p>Open one live voice call. Your bots join the same call, each as its own speaker.</p>
+        </div>
+        <div class="tc tc-glass tc-step" data-z="-190" data-x="1" data-y="0.4" data-w="400" data-theme="dark" style="--c:var(--magenta)">
+          <span class="tc-num">02</span><h3>Say a bot’s name</h3><p>A wake-word listener hears names like “Hey Grok Bot” or “Ledger” and hands what you say next to that bot.</p>
+        </div>
+        <div class="tc tc-glass tc-step" data-z="-200" data-x="-1" data-y="-0.3" data-w="400" data-theme="dark" style="--c:var(--green)">
+          <span class="tc-num">03</span><h3>The bot thinks</h3><p>The named bot writes its reply with its own persona, memory and tools.</p>
+        </div>
+        <div class="tc tc-glass tc-step" data-z="-210" data-x="1" data-y="0.2" data-w="400" data-theme="dark" style="--c:var(--orange)">
+          <span class="tc-num">04</span><h3>It answers in its own voice</h3><p>The reply is spoken in that bot’s dedicated voice, but only when the turn-taking mixer gives it the floor.</p>
+        </div>
+        <div class="tc tc-glass tc-step" data-z="-220" data-x="-1" data-y="0.1" data-w="400" data-theme="dark" style="--c:var(--violet)">
+          <span class="tc-num">05</span><h3>Long text goes on screen <span class="badge">Next build</span></h3><p>Links, commit hashes, drafts and code show up in a copyable panel instead of being read out character by character.</p>
+        </div>
+
+        <!-- features -->
+        <div class="tc tc-head" data-z="-238" data-w="760" data-y="1.6" data-theme="dark">
+          <p class="tk">Features</p>
+          <h2>Why a blender, not just one bot?</h2>
+          <p>Many bots in one call only works if they sound different and don’t talk over each other.</p>
+        </div>
+        <div class="tc tc-glass tc-feat" data-z="-248" data-x="1" data-w="380" data-theme="dark" style="--c:var(--blue)"><h3>Summon by name</h3><p>Wake words like “Hey Grok Bot”, “M&amp;M” or “Ledger” route your question to the bot you named.</p></div>
+        <div class="tc tc-glass tc-feat" data-z="-257" data-x="-1" data-y="0.3" data-w="380" data-theme="dark" style="--c:var(--magenta)"><h3>A voice for every bot</h3><p>Each bot has its own dedicated text-to-speech voice, so you can tell who’s talking without looking.</p></div>
+        <div class="tc tc-glass tc-feat" data-z="-266" data-x="1" data-y="-0.3" data-w="380" data-theme="dark" style="--c:var(--green)"><h3>Turn-taking mixer</h3><p>Bot speech is queued so only one voice talks at a time. Silence length, falling pitch and energy drops tell it when a speaker is done.</p></div>
+        <div class="tc tc-glass tc-feat" data-z="-275" data-x="-1" data-w="380" data-theme="dark" style="--c:var(--orange)"><h3>Stay in control with one voice</h3><p>Barge-in: when you start talking, bot audio stops or ducks so you’re never talked over.</p></div>
+        <div class="tc tc-glass tc-feat" data-z="-284" data-x="1" data-y="0.3" data-w="380" data-theme="dark" style="--c:var(--violet)"><h3>Attribution &amp; proof</h3><p>Built-in attribution and proof features, such as OpenTimestamps stamping. Part of the Symphony plan.</p></div>
+        <div class="tc tc-glass tc-feat" data-z="-293" data-x="-1" data-y="-0.2" data-w="380" data-theme="dark" style="--c:var(--cyan)"><h3>On-screen text <span class="badge">Next build</span></h3><p>Copyable text during the call, with a short spoken summary like “I put the commit hash on your screen”, plus a history for the session.</p></div>
+
+        <!-- use cases -->
+        <div class="tc tc-head" data-z="-308" data-w="720" data-y="1.5" data-theme="dark">
+          <p class="tk">Use cases</p>
+          <h2>Your whole bot team, at once.</h2>
+        </div>
+        <div class="tc tc-glass tc-feat" data-z="-317" data-x="-1" data-w="400" data-theme="dark" style="--c:var(--blue)"><h3>Meet with all your bots at once</h3><p>Have a meeting with your whole bot team in one call. Each one answers in its own voice, in turn.</p></div>
+        <div class="tc tc-glass tc-feat" data-z="-326" data-x="1" data-y="0.3" data-w="400" data-theme="dark" style="--c:var(--magenta)"><h3>Brainstorm between your bots</h3><p>Throw out an idea and hear every bot build on it, one voice at a time.</p></div>
+        <div class="tc tc-glass tc-feat" data-z="-335" data-x="-1" data-y="-0.2" data-w="400" data-theme="dark" style="--c:var(--green)"><h3>Build your own project together</h3><p>Establish a team of bots and build your very own project together, at once.</p></div>
+        <div class="tc tc-glass tc-feat" data-z="-344" data-x="1" data-w="380" data-theme="dark" style="--c:var(--orange)"><h3>Grab what you need to copy <span class="badge">Next build</span></h3><p>Draft posts, repo URLs and commit hashes land on your screen while the call keeps going.</p></div>
+
+        <!-- team (mascots are WebGL sprites placed next to these cards) -->
+        <div class="tc tc-head" data-z="-362" data-w="720" data-y="1.7" data-theme="dark">
+          <p class="tk">Meet the team</p>
+          <h2>Five bots, five colors.</h2>
+          <p>Each bot keeps its color everywhere: its line, its face, its captions.</p>
+        </div>
+        <div class="tc tc-glass tc-bot" data-z="-374" data-x="1" data-w="340" data-theme="dark" data-bot="0" style="--c:var(--blue)"><h3>M&amp;M</h3><p class="sh">Blue · round ball</p></div>
+        <div class="tc tc-glass tc-bot" data-z="-388" data-x="-1" data-w="340" data-theme="dark" data-bot="1" style="--c:var(--magenta)"><h3>Hollywood</h3><p class="sh">Magenta · four-point star</p></div>
+        <div class="tc tc-glass tc-bot" data-z="-402" data-x="1" data-w="340" data-theme="dark" data-bot="2" style="--c:var(--green)"><h3>Scalper</h3><p class="sh">Green · rounded square</p></div>
+        <div class="tc tc-glass tc-bot" data-z="-416" data-x="-1" data-w="340" data-theme="dark" data-bot="3" style="--c:var(--orange)"><h3>Ledger</h3><p class="sh">Orange · rounded diamond</p></div>
+        <div class="tc tc-glass tc-bot" data-z="-430" data-x="1" data-w="340" data-theme="dark" data-bot="4" style="--c:var(--violet)"><h3>Grok Bot</h3><p class="sh">Violet · cloud</p></div>
+        <div class="tc tc-note" data-z="-436" data-y="-1.6" data-w="560" data-theme="dark"><p>Your own personal bots, each with its own voice.</p></div>
+
+        <!-- pricing (bright) -->
+        <div class="tc tc-head" data-z="-462" data-w="760" data-y="1.8" data-theme="light">
+          <p class="tk">Pricing</p>
+          <h2>Pick your band size.</h2>
+          <p class="tc-soon"><span class="soon">Coming soon</span> Plans not available yet.</p>
+        </div>
+        <div class="tc tc-plan" data-z="-492" data-plan="0" data-w="360" data-theme="light" style="--c:var(--cyan);--c2:var(--blue)">
+          <h3>Yap</h3><p class="pr">Free</p><p class="for">One bot, queue only</p>
+          <ul><li><b>1</b> bot per call</li><li>Reply queue</li><li class="no">No voice mixing or turn-taking</li></ul>
+          <span class="pbtn">Coming soon</span>
+        </div>
+        <div class="tc tc-plan featured" data-z="-492" data-plan="1" data-w="360" data-theme="light" style="--c:var(--magenta);--c2:var(--violet)">
+          <span class="tag">Most popular</span>
+          <h3>Chorus</h3><p class="pr">$20<span>/mo</span></p><p class="for">Three bots, with the blender and turn-taking</p>
+          <ul><li>Up to <b>3</b> bots per call</li><li>Full voice blender: a separate voice per bot</li><li>Turn-taking mixer (pauses and pitch drops)</li></ul>
+          <span class="pbtn">Coming soon</span>
+        </div>
+        <div class="tc tc-plan" data-z="-492" data-plan="2" data-w="360" data-theme="light" style="--c:var(--orange);--c2:var(--green)">
+          <h3>Symphony</h3><p class="pr">$50<span>/mo</span></p><p class="for">Unlimited bots, priority queue, attribution proof</p>
+          <ul><li><b>Unlimited</b> bots per call</li><li>Everything in Chorus</li><li>Priority queue</li><li>Attribution and proof, such as OpenTimestamps stamping</li></ul>
+          <span class="pbtn">Coming soon</span>
+        </div>
+        <div class="tc tc-note light" data-z="-494" data-y="-3.4" data-w="640" data-theme="light" data-plan-note="1"><p>Coming soon — plans not available yet. Draft pricing; it may change before launch. Nothing to buy here yet.</p></div>
+
+        <!-- end -->
+        <div class="tc tc-end" data-z="-541" data-y="-2.7" data-w="900" data-theme="dark"><p>Stay in control of your team with one voice.</p></div>
+      </div>
+    </div>
+    <nav class="tour-dots" aria-label="Tour sections">
+      <div class="tour-bar" aria-hidden="true"><i></i></div>
+      <ol>
+        <li><button type="button" data-stop="start" aria-label="Start"><span>Start</span></button></li>
+        <li><button type="button" data-stop="inside" aria-label="Step inside"><span>Step inside</span></button></li>
+        <li><button type="button" data-stop="what" aria-label="What is Voice Blender"><span>What it is</span></button></li>
+        <li><button type="button" data-stop="how" aria-label="How it works"><span>How it works</span></button></li>
+        <li><button type="button" data-stop="features" aria-label="Features"><span>Features</span></button></li>
+        <li><button type="button" data-stop="bots" aria-label="Meet the team"><span>Team</span></button></li>
+        <li><button type="button" data-stop="pricing" aria-label="Pricing"><span>Pricing</span></button></li>
+        <li><button type="button" data-stop="join" aria-label="Join the call"><span>Join</span></button></li>
+      </ol>
+    </nav>
 
     <!-- WHAT -->
-    <section id="what" class="section what" aria-labelledby="what-title">
+    <section id="what" class="section what plain-only" aria-labelledby="what-title">
       <div class="blob b1" data-depth="0.25" aria-hidden="true"></div>
       <div class="blob b2" data-depth="-0.2" aria-hidden="true"></div>
       <div class="wrap two-col">
         <div class="reveal">
           <p class="kicker">What is Voice Blender?</p>
           <h2 id="what-title">One live call. Your whole bot team. Every bot with its own voice.</h2>
-          <p class="big">Voice Blender lets several AI bots take part in one live voice conversation. You call a bot by name, like <strong>“Hey Scalper”</strong>, and that bot’s reply is spoken in its own dedicated voice.</p>
+          <p class="big">Voice Blender lets several AI bots take part in one live voice conversation. You call a bot by name, like <strong>“Hey Grok Bot”</strong>, and that bot’s reply is spoken in its own dedicated voice.</p>
           <p>A turn-taking mixer blends the bots’ voices so they don’t talk over each other or over you. It listens for acoustic cues like pauses and pitch drops, not just text signals, to decide when someone has finished speaking.</p>
           <ul class="chips" aria-label="Voice Blender in three parts">
             <li style="--c:var(--blue)">Wake words</li>
@@ -101,10 +259,10 @@
           <ol class="captions layer" style="--z:40px" aria-label="Example captions, color-coded by bot">
             <li class="you"><b>You</b> Hey Grok Bot, help me plan my week.</li>
             <li style="--c:var(--violet)"><b>Grok Bot</b> Sure. What’s on your list?</li>
-            <li class="you"><b>You</b> M&amp;M, what’s the crypto team looking at?</li>
-            <li style="--c:var(--blue)"><b>M&amp;M</b> Here’s the rundown from the team.</li>
-            <li class="you"><b>You</b> Ledger, what’s in today’s journal?</li>
-            <li style="--c:var(--orange)"><b>Ledger</b> Pulling up today’s entries.</li>
+            <li class="you"><b>You</b> M&amp;M, what do you think of this idea?</li>
+            <li style="--c:var(--blue)"><b>M&amp;M</b> Here’s what I’d add.</li>
+            <li class="you"><b>You</b> Ledger, what’s next on the project?</li>
+            <li style="--c:var(--orange)"><b>Ledger</b> Here’s the next step.</li>
           </ol>
           <figcaption class="cm-foot layer" style="--z:20px">One bot speaks at a time. Captions keep each bot’s color, so you always know who said what.</figcaption>
         </figure>
@@ -112,7 +270,7 @@
     </section>
 
     <!-- HOW -->
-    <section id="how" class="section how" aria-labelledby="how-title">
+    <section id="how" class="section how plain-only" aria-labelledby="how-title">
       <div class="blob b3" data-depth="0.3" aria-hidden="true"></div>
       <div class="wrap">
         <div class="head reveal">
@@ -129,7 +287,7 @@
           <li class="step glass tilt reveal" data-tilt style="--c:var(--magenta)">
             <span class="num layer" style="--z:40px">2</span>
             <h3 class="layer" style="--z:30px">Say a bot’s name</h3>
-            <p class="layer" style="--z:20px">A wake-word listener hears names like “Hey Scalper” or “Ledger” and hands what you say next to that bot.</p>
+            <p class="layer" style="--z:20px">A wake-word listener hears names like “Hey Grok Bot” or “Ledger” and hands what you say next to that bot.</p>
           </li>
           <li class="step glass tilt reveal" data-tilt style="--c:var(--green)">
             <span class="num layer" style="--z:40px">3</span>
@@ -151,7 +309,7 @@
     </section>
 
     <!-- FEATURES -->
-    <section id="features" class="section features" aria-labelledby="features-title">
+    <section id="features" class="section features plain-only" aria-labelledby="features-title">
       <div class="blob b4" data-depth="-0.25" aria-hidden="true"></div>
       <div class="wrap">
         <div class="head reveal">
@@ -163,7 +321,7 @@
           <article class="feat glass tilt reveal" data-tilt style="--c:var(--blue)">
             <div class="ficon layer" style="--z:45px" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Zm-7 9a7 7 0 0 0 14 0M12 19v3"/></svg></div>
             <h3 class="layer" style="--z:30px">Summon by name</h3>
-            <p class="layer" style="--z:18px">Wake words like “Hey Scalper”, “M&amp;M” or “Ledger” route your question to the bot you named.</p>
+            <p class="layer" style="--z:18px">Wake words like “Hey Grok Bot”, “M&amp;M” or “Ledger” route your question to the bot you named.</p>
           </article>
           <article class="feat glass tilt reveal" data-tilt style="--c:var(--magenta)">
             <div class="ficon layer" style="--z:45px" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 7v10M21 12h0"/></svg></div>
@@ -177,7 +335,7 @@
           </article>
           <article class="feat glass tilt reveal" data-tilt style="--c:var(--orange)">
             <div class="ficon layer" style="--z:45px" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v10M8 9l4 4 4-4M5 21h14"/></svg></div>
-            <h3 class="layer" style="--z:30px">You stay in charge</h3>
+            <h3 class="layer" style="--z:30px">Stay in control with one voice</h3>
             <p class="layer" style="--z:18px">Barge-in: when you start talking, bot audio stops or ducks so you’re never talked over.</p>
           </article>
           <article class="feat glass tilt reveal" data-tilt style="--c:var(--violet)">
@@ -195,7 +353,7 @@
     </section>
 
     <!-- BOTS -->
-    <section id="bots" class="section bots-sec" aria-labelledby="bots-title">
+    <section id="bots" class="section bots-sec plain-only" aria-labelledby="bots-title">
       <div class="blob b5" data-depth="0.2" aria-hidden="true"></div>
       <div class="wrap">
         <div class="head reveal">
@@ -208,7 +366,6 @@
             <canvas class="mascot big layer" style="--z:60px" data-bot="0" width="140" height="140" aria-hidden="true"></canvas>
             <h3 class="layer" style="--z:35px">M&amp;M</h3>
             <p class="shape layer" style="--z:20px">Blue · round ball</p>
-            <p class="role layer" style="--z:20px">Crypto team lead.</p>
           </article>
           <article class="bot glass tilt reveal" data-tilt style="--c:var(--magenta)">
             <canvas class="mascot big layer" style="--z:60px" data-bot="1" width="140" height="140" aria-hidden="true"></canvas>
@@ -219,46 +376,43 @@
             <canvas class="mascot big layer" style="--z:60px" data-bot="2" width="140" height="140" aria-hidden="true"></canvas>
             <h3 class="layer" style="--z:35px">Scalper</h3>
             <p class="shape layer" style="--z:20px">Green · rounded square</p>
-            <p class="role layer" style="--z:20px">Alert-only scalping bot. It sends alerts; it doesn’t trade.</p>
           </article>
           <article class="bot glass tilt reveal" data-tilt style="--c:var(--orange)">
             <canvas class="mascot big layer" style="--z:60px" data-bot="3" width="140" height="140" aria-hidden="true"></canvas>
             <h3 class="layer" style="--z:35px">Ledger</h3>
             <p class="shape layer" style="--z:20px">Orange · rounded diamond</p>
-            <p class="role layer" style="--z:20px">Trade journal and risk coach.</p>
           </article>
           <article class="bot glass tilt reveal" data-tilt style="--c:var(--violet)">
             <canvas class="mascot big layer" style="--z:60px" data-bot="4" width="140" height="140" aria-hidden="true"></canvas>
             <h3 class="layer" style="--z:35px">Grok Bot</h3>
             <p class="shape layer" style="--z:20px">Violet · cloud</p>
-            <p class="role layer" style="--z:20px">General assistant.</p>
           </article>
         </div>
-        <p class="fine center">Some bots talk about markets. Not financial advice.</p>
+        <p class="fine center">Your own personal bots, each with its own voice.</p>
       </div>
     </section>
 
     <!-- USE CASES -->
-    <section id="use-cases" class="section uses" aria-labelledby="uses-title">
+    <section id="use-cases" class="section uses plain-only" aria-labelledby="uses-title">
       <div class="wrap">
         <div class="head reveal">
           <p class="kicker">Use cases</p>
-          <h2 id="uses-title">One call, the right voice for each job.</h2>
+          <h2 id="uses-title">Your whole bot team, at once.</h2>
         </div>
         <div class="use-grid">
-          <article class="use glass tilt reveal" data-tilt style="--c:var(--blue);--c2:var(--orange)">
-            <h3 class="layer" style="--z:30px">Check in with your crypto team</h3>
-            <p class="layer" style="--z:18px">Ask M&amp;M for the team rundown, hear Scalper’s alerts, and have Ledger pull up your journal, all in one call. <em>Not financial advice.</em></p>
-          </article>
-          <article class="use glass tilt reveal" data-tilt style="--c:var(--violet);--c2:var(--cyan)">
-            <h3 class="layer" style="--z:30px">Plan your week</h3>
-            <p class="layer" style="--z:18px">Talk it through with Grok Bot, your general assistant, without leaving the call.</p>
+          <article class="use glass tilt reveal" data-tilt style="--c:var(--blue);--c2:var(--cyan)">
+            <h3 class="layer" style="--z:30px">Meet with all your bots at once</h3>
+            <p class="layer" style="--z:18px">Have a meeting with your whole bot team in one call. Each one answers in its own voice, in turn.</p>
           </article>
           <article class="use glass tilt reveal" data-tilt style="--c:var(--magenta);--c2:var(--violet)">
-            <h3 class="layer" style="--z:30px">One question, many answers</h3>
-            <p class="layer" style="--z:18px">Ask something like “Review this pitch” and hear your bots answer in turn, each in its own voice.</p>
+            <h3 class="layer" style="--z:30px">Brainstorm between your bots</h3>
+            <p class="layer" style="--z:18px">Throw out an idea and hear every bot build on it, one voice at a time.</p>
           </article>
           <article class="use glass tilt reveal" data-tilt style="--c:var(--green);--c2:var(--blue)">
+            <h3 class="layer" style="--z:30px">Build your own project together</h3>
+            <p class="layer" style="--z:18px">Establish a team of bots and build your very own project together, at once.</p>
+          </article>
+          <article class="use glass tilt reveal" data-tilt style="--c:var(--orange);--c2:var(--magenta)">
             <h3 class="layer" style="--z:30px">Grab what you need to copy <span class="badge">Next build</span></h3>
             <p class="layer" style="--z:18px">Draft posts, repo URLs and commit hashes land on your screen while the call keeps going.</p>
           </article>
@@ -267,7 +421,7 @@
     </section>
 
     <!-- PRICING -->
-    <section id="pricing" class="section pricing" aria-labelledby="pricing-title">
+    <section id="pricing" class="section pricing plain-only" aria-labelledby="pricing-title">
       <div class="blob b6" data-depth="0.3" aria-hidden="true"></div>
       <div class="wrap">
         <div class="head reveal center">
@@ -349,7 +503,7 @@
           </details>
           <details class="glass">
             <summary>How does a bot know I’m talking to it?</summary>
-            <p>Wake words. A listener picks up bot names in what you say, like “Hey Scalper”, “M&amp;M” or “Ledger”, and hands the question that follows to that bot.</p>
+            <p>Wake words. A listener picks up bot names in what you say, like “Hey Grok Bot”, “M&amp;M” or “Ledger”, and hands the question that follows to that bot.</p>
           </details>
           <details class="glass">
             <summary>Won’t the bots talk over each other?</summary>
@@ -368,8 +522,8 @@
             <p>Not yet. Voice Blender is in development and the plans aren’t available yet. Follow <a href="https://x.com/VoiceBlender" rel="noopener">@VoiceBlender</a> on X to hear when the waitlist opens.</p>
           </details>
           <details class="glass">
-            <summary>Do the bots give financial advice?</summary>
-            <p>No. Some bots talk about markets: Scalper only sends alerts and Ledger keeps a trade journal. Nothing they say is financial advice.</p>
+            <summary>What can I do with it?</summary>
+            <p>Create and do anything with your own personal bots, together: have a meeting with all your bots at once, brainstorm ideas between them, or set up a team of bots and build your very own project together. You stay in control of your team with one voice.</p>
           </details>
         </div>
       </div>
@@ -412,5 +566,6 @@
   <script src="vortex2d.js"></script>
   <script src="script.js"></script>
   <script type="module" src="hero3d.js"></script>
+  <script type="module" src="tour.js"></script>
 </body>
 </html>
