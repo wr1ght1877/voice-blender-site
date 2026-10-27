@@ -188,3 +188,54 @@
     b.addEventListener('click', function () { setTerm(b.getAttribute('data-term')); });
   });
 })();
+
+/* Hero subline types itself out on load. The full text stays in the HTML (and in a screen-reader copy while typing);
+   the not-yet-typed part is kept in place but transparent, so the paragraph's height never changes. */
+(function () {
+  'use strict';
+  var p = document.querySelector('.hero .sub');
+  if (!p || !window.requestAnimationFrame) return;
+  var full = p.textContent.replace(/\s+/g, ' ').trim();
+  var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (rm || (window.VB && VB.reduceMotion) || window.scrollY > 40 || /[?&]notype\b/.test(location.search)) return;
+
+  // schedule: steady pace with short pauses after punctuation, scaled to ~5 s total
+  var times = [], t = 0, i, ch;
+  for (i = 0; i < full.length; i++) {
+    ch = full[i]; t += 1;
+    if (ch === ',') t += 4; else if (ch === '.' || ch === '!' || ch === '?') t += 9;
+    times.push(t);
+  }
+  var scale = 5000 / t, START = 900;
+
+  var sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = full;
+  var vis = document.createElement('span'); vis.className = 'tw'; vis.setAttribute('aria-hidden', 'true');
+  var on = document.createElement('span'), cur = document.createElement('span'), off = document.createElement('span');
+  cur.className = 'tw-cur'; off.className = 'tw-off'; off.textContent = full;
+  vis.appendChild(on); vis.appendChild(cur); vis.appendChild(off);
+  p.textContent = ''; p.appendChild(sr); p.appendChild(vis);
+  p.classList.add('typing');
+
+  var shown = 0, t0 = 0, done = false, raf = 0;
+  function set(n) { if (n === shown) return; shown = n; on.textContent = full.slice(0, n); off.textContent = full.slice(n); }
+  function finish() {
+    if (done) return; done = true; cancelAnimationFrame(raf); set(full.length);
+    p.classList.add('typed');
+    stopListening();
+    setTimeout(function () { p.textContent = full; p.classList.remove('typing', 'typed'); }, 2200);   // back to plain text after the cursor fades
+  }
+  function step(now) {
+    if (!t0) t0 = now;
+    var el = (now - t0) / scale, n = shown;
+    while (n < full.length && times[n] <= el) n++;
+    set(n);
+    if (n >= full.length) return finish();
+    raf = requestAnimationFrame(step);
+  }
+  var evs = ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown'];
+  function early() { finish(); }
+  function stopListening() { evs.forEach(function (e) { removeEventListener(e, early, { passive: true }); }); }
+  evs.forEach(function (e) { addEventListener(e, early, { passive: true }); });
+  setTimeout(function () { if (!done) raf = requestAnimationFrame(step); }, START);
+  window.VB = window.VB || {}; VB.finishTyping = finish;
+})();
