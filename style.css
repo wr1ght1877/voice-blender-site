@@ -284,7 +284,6 @@ html.tour .tour-wrap{display:block;position:relative;height:2400vh}
 .tour-gl canvas{display:block;width:100%!important;height:100%!important}
 .tour-css{pointer-events:none;overflow:hidden}
 .tour-flash{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,#fff 0%,#e8f0ff 35%,rgba(170,200,255,.9) 70%,rgba(120,150,255,.8) 100%)}
-.tour-hole{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,#000 0%,#000 58%,#02030c 66%,rgba(170,215,255,.95) 72%,rgba(110,130,255,.5) 80%,rgba(40,50,160,.2) 92%,rgba(0,0,0,0) 100%)}
 .tour-cards{display:none}
 html.tour .plain-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;border:0!important}
 
@@ -369,7 +368,7 @@ html.tour .tour-dots{display:block}
   .tour-dots button::before{width:7px;height:7px;margin:-3.5px 0 0 -3.5px;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
 }
 
-/* sound toggle (beat is off until pressed) */
+/* sound toggle (beat starts on the first click/tap/key, or from this toggle) */
 .sound-toggle{position:fixed;right:16px;bottom:16px;z-index:60;display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:10px 16px;border-radius:999px;font:700 .95rem system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#fff;background:rgba(10,12,40,.82);border:1px solid rgba(255,255,255,.28);box-shadow:0 10px 30px rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer}
 .sound-toggle:hover{background:rgba(30,34,90,.92)}
 .st-icon{display:inline-flex;align-items:flex-end;gap:2px;height:16px}

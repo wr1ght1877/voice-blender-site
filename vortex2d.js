@@ -96,8 +96,34 @@
   }
 
   function drawFigure() {
-    // glowing woman; her black-hole mouth sits at the vortex center
-    VB.drawWoman(ctx, CX, CY, Math.max(40, S * 0.2));
+    var h = Math.max(26, S * 0.15);       // tiny figure
+    var headR = h * 0.12;
+    var hx = CX, hy = CY - headR * 0.35;  // mouth sits at the vortex center
+    ctx.save();
+    ctx.shadowColor = 'rgba(120,180,255,0.95)';
+    ctx.shadowBlur = h * 0.18;
+    ctx.fillStyle = '#01030c';
+    ctx.beginPath(); ctx.arc(hx, hy, headR, 0, Math.PI * 2); ctx.fill();
+    // neck + body
+    var top = hy + headR * 0.9, sw = h * 0.17;
+    ctx.beginPath();
+    ctx.moveTo(hx - headR * 0.35, top);
+    ctx.lineTo(hx + headR * 0.35, top);
+    ctx.quadraticCurveTo(hx + sw, top + h * 0.03, hx + sw, top + h * 0.12);
+    ctx.lineTo(hx + sw * 0.78, top + h * 0.45);
+    ctx.lineTo(hx + sw * 0.5, top + h * 0.47);
+    ctx.lineTo(hx + sw * 0.55, top + h * 0.86);
+    ctx.lineTo(hx + sw * 0.12, top + h * 0.86);
+    ctx.lineTo(hx, top + h * 0.5);
+    ctx.lineTo(hx - sw * 0.12, top + h * 0.86);
+    ctx.lineTo(hx - sw * 0.55, top + h * 0.86);
+    ctx.lineTo(hx - sw * 0.5, top + h * 0.47);
+    ctx.lineTo(hx - sw * 0.78, top + h * 0.45);
+    ctx.lineTo(hx - sw, top + h * 0.12);
+    ctx.quadraticCurveTo(hx - sw, top + h * 0.03, hx - headR * 0.35, top);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
   }
 
   // White spiky voice-prompt waveform rising out of the mouth
