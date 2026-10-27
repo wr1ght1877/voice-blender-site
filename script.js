@@ -239,3 +239,25 @@
   setTimeout(function () { if (!done) raf = requestAnimationFrame(step); }, START);
   window.VB = window.VB || {}; VB.finishTyping = finish;
 })();
+
+/* Fixed corner buttons (Skip/Take the tour, Sound) fade out while they would cover the video player,
+   and come back as soon as the player isn't under them. */
+(function () {
+  'use strict';
+  var frame = document.querySelector('.watch-frame');
+  var pills = Array.prototype.slice.call(document.querySelectorAll('.tour-skip, .tour-take, .sound-toggle'));
+  if (!frame || !pills.length) return;
+  var queued = false;
+  function check() {
+    queued = false;
+    var f = frame.getBoundingClientRect();
+    pills.forEach(function (el) {
+      var r = el.getBoundingClientRect(), pad = 8;
+      var over = r.width > 0 && r.right + pad > f.left && r.left - pad < f.right && r.bottom + pad > f.top && r.top - pad < f.bottom;
+      el.classList.toggle('over-video', over);
+    });
+  }
+  function q() { if (!queued) { queued = true; requestAnimationFrame(check); } }
+  addEventListener('scroll', q, { passive: true }); addEventListener('resize', q);
+  q();
+})();

@@ -425,3 +425,5 @@ html.tour .tour-dots{display:block}
 .watch-video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#05060f}
 .watch-frame.is-vertical{max-width:min(420px,100%,calc(78vh * 9 / 16))}
 .watch-video.is-vertical{aspect-ratio:9/16}
+.tour-skip,.tour-take,.sound-toggle{transition:opacity .25s,visibility .25s}
+.over-video{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
