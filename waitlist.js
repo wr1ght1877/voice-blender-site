@@ -31,8 +31,6 @@
     form.hidden = true;
     done.hidden = false;
     document.getElementById("wl-hello").textContent = d.already ? "You're already on the list!" : "You're on the list!";
-    document.getElementById("wl-position").textContent = Number(d.position).toLocaleString();
-    document.getElementById("wl-total").textContent = Number(d.total).toLocaleString();
     document.getElementById("wl-refcount").textContent = Number(d.referrals).toLocaleString();
     document.getElementById("wl-link").value = linkFor(d.code);
   }

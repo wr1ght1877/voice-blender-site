@@ -408,3 +408,4 @@ html.tour .tour-dots{display:block}
 .wl-share{display:flex;gap:8px}
 .wl-share input{font-size:14px}
 .wl-form[hidden],.wl-done[hidden]{display:none!important}
+.wait-card p.wl-lead{margin:0 auto 6px;font-size:1.05rem;color:#ffd166}
