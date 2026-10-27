@@ -51,8 +51,31 @@
     ctx.closePath();
   }
 
+  /* 3D toy-style renders of each bot (made with the same builder as the opening tornado, vbscene.js).
+     Each PNG spans 2.8 x the mascot size `s`; until they load we fall back to the flat drawing below. */
+  var IMGS = [], pending = BOTS.length, ready = [];
+  BOTS.forEach(function (bot, i) {
+    var im = new Image();
+    im.onload = im.onerror = function () { if (--pending === 0) { ready.forEach(function (f) { f(); }); ready = []; } };
+    im.src = 'assets/bots/bot-' + i + '.png';
+    IMGS[i] = im; bot.img = im;
+  });
+  function onImagesReady(f) { if (pending === 0) f(); else ready.push(f); }
+
   function drawMascot(ctx, bot, x, y, s, opts) {
     opts = opts || {};
+    var im = bot.img;
+    if (im && im.complete && im.naturalWidth) {
+      var w = s * 2.8;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(opts.tilt || 0);
+      ctx.shadowColor = bot.color;
+      ctx.shadowBlur = s * 1.1;
+      ctx.drawImage(im, -w / 2, -w / 2, w, w);
+      ctx.restore();
+      return;
+    }
     var lookX = opts.lookX || 0, lookY = opts.lookY || 0, blink = opts.blink || 0, tilt = opts.tilt || 0;
     ctx.save();
     ctx.translate(x, y);
@@ -93,5 +116,6 @@
   window.VB = window.VB || {};
   window.VB.BOTS = BOTS;
   window.VB.drawMascot = drawMascot;
+  window.VB.onMascotImages = onImagesReady;
   window.VB.reduceMotion = reduceMotion;
 })();

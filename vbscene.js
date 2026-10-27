@@ -108,9 +108,7 @@ export function createHero({ small = false } = {}) {
   });
 
   /* soft toy lighting for the 3D mascots (overlay scene only has these lit meshes) */
-  const hemiL = new THREE.HemisphereLight(0xffffff, 0x3a2a90, 1.0); front.add(hemiL);
-  const keyL = new THREE.DirectionalLight(0xffffff, 2.0); keyL.position.set(-2.5, 4, 6); front.add(keyL);
-  const rimL = new THREE.DirectionalLight(0xb8c8ff, 1.2); rimL.position.set(3, -1, -2); front.add(rimL);
+  addMascotLights(front);
   /* keep each mascot's face toward the camera (like the old sprites), with a gentle 3D sway */
   const _q = new THREE.Quaternion(), _pq = new THREE.Quaternion(), _e = new THREE.Euler();
   let clock = 0, hooked = null;
@@ -227,13 +225,20 @@ function mascotBody(shape, s, mat) {
     .forEach(([x, y, r]) => { const b = new THREE.Mesh(geo, mat); b.position.set(x * s, (y + 0.08) * s, 0); b.scale.set(r * s, r * s, r * s * 0.85); grp.add(b); });
   return grp;
 }
-export function makeMascot3D(bot, i, scale = 1) {
+export function addMascotLights(group) {
+  const hemiL = new THREE.HemisphereLight(0xffffff, 0x3a2a90, 1.0); group.add(hemiL);
+  const keyL = new THREE.DirectionalLight(0xffffff, 2.0); keyL.position.set(-2.5, 4, 6); group.add(keyL);
+  const rimL = new THREE.DirectionalLight(0xb8c8ff, 1.2); rimL.position.set(3, -1, -2); group.add(rimL);
+  return group;
+}
+export const MASCOT_SIZE = MASCOT_S;
+export function makeMascot3D(bot, i, scale = 1, { glow: withGlow = true } = {}) {
   const s = MASCOT_S, root = new THREE.Group();
   const body = mascotBody(bot.shape, s, toyMaterial(bot.color));
   root.add(body);
   // glow halo behind (like the old sprite glow)
   const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTexture([[0, bot.color + 'aa'], [0.45, bot.color + '44'], [1, bot.color + '00']]), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false }));
-  glow.scale.setScalar(s * 5); glow.position.z = -s * 0.6; glow.renderOrder = 9; root.add(glow);
+  glow.scale.setScalar(s * 5); glow.position.z = -s * 0.6; glow.renderOrder = 9; if (withGlow) root.add(glow);
   // eyes: white rounded pills, slightly raised from the front surface
   root.updateMatrixWorld(true);
   const ray = new THREE.Raycaster(), cl = bot.shape === 'cloud', ey = cl ? -s * 0.04 : s * 0.04, ex = cl ? s * 0.24 : s * 0.32;

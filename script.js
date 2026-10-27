@@ -14,7 +14,9 @@
     c.width = size * dpr; c.height = size * dpr;
     var cx = c.getContext('2d');
     cx.scale(dpr, dpr);
-    VB.drawMascot(cx, bot, size / 2, size / 2, size * 0.28, { lookY: 0.2 });
+    var paint = function () { cx.clearRect(0, 0, size, size); VB.drawMascot(cx, bot, size / 2, size / 2, size * 0.28, { lookY: 0.2 }); };
+    paint();
+    if (VB.onMascotImages) VB.onMascotImages(paint);
   });
 
   /* Nav: scrolled state, mobile menu, active link */

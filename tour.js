@@ -11,7 +11,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { createHero, makeBotShape, makeBackground, mascotTexture, dotTexture, radialTexture, BOT_COLORS } from './vbscene.js';
+import { createHero, makeBotShape, makeBackground, makeMascot3D, addMascotLights, MASCOT_SIZE, dotTexture, radialTexture, BOT_COLORS } from './vbscene.js';
 
 const VB = window.VB || (window.VB = {});
 const root = document.documentElement;
@@ -159,11 +159,14 @@ async function start() {
   for (let i = 0; i < CUBES; i++) cubeData.push({ x: (Math.random() < 0.5 ? -1 : 1) * (5 + Math.random() * 10), y: -4 + Math.random() * 11, z: -160 - Math.random() * 280, s: 0.4 + Math.random() * 1.2, r: Math.random() * 6 });
   scene.add(cubes);
 
-  /* team mascots: crisp sprites (overlay) + soft glow (bloomed) */
+  /* team mascots: 3D toy bots like the opening tornado (crisp, in the overlay, with their own lights) + soft glow (bloomed) */
   const BOTS = VB.BOTS || [];
-  const mascots = BOTS.map((bot) => {
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: mascotTexture(bot, 512), transparent: true, depthWrite: false, toneMapped: false }));
-    s.scale.setScalar(3.4); overlay.add(s);
+  const teamLights = addMascotLights(new THREE.Group()); teamLights.visible = false; overlay.add(teamLights);
+  const M3 = 0.195 / MASCOT_SIZE, _mq = new THREE.Quaternion(), _me = new THREE.Euler();            // old sprite scale -> 3D mascot scale (same on-screen size)
+  const mascots = BOTS.map((bot, i) => {
+    const s = makeMascot3D(bot, i, 1, { glow: false });
+    s.userData.mats = []; s.traverse((o) => { if (o.isMesh && !s.userData.mats.includes(o.material)) { o.material.transparent = true; s.userData.mats.push(o.material); } });
+    s.scale.setScalar(3.4 * M3); overlay.add(s);
     const g = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTexture([[0, bot.color], [0.35, bot.color + '66'], [1, bot.color + '00']]), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false }));
     g.scale.setScalar(4); scene.add(g);
     return { s, g };
@@ -237,7 +240,7 @@ async function start() {
         if (x === 0 || stacked) { y = -1.4; m.s.position.set(0, 2.1, z); }
         else m.s.position.set(c.side * Math.max(0.2, Math.abs(x) - (c.w * 0.01 * s) / 2 - 2.0), 0.3, z + 0.5);
         m.g.position.copy(m.s.position); m.g.position.z -= 0.3;
-        m.s.scale.setScalar(stacked ? 2.4 : 3.4); m.g.scale.setScalar(stacked ? 3 : 4.2);
+        m.s.scale.setScalar((stacked ? 2.4 : 3.4) * M3); m.g.scale.setScalar(stacked ? 3 : 4.2);
       }
       if (c.plan != null) {
         if (stacked) { z = -470 - c.plan * 15; x = (c.plan - 1) * 0.3; y = 0; ry = 0; s = Math.min(1, (viewW(9) * 0.86) / (c.w * 0.01)); }
@@ -363,14 +366,19 @@ async function start() {
     cubeData.forEach((c, i) => { e.set(time * 0.3 + c.r, time * 0.2 + c.r, 0); q.setFromEuler(e); pv.set(c.x, c.y + Math.sin(time * 0.5 + c.r) * 0.4, c.z); sv.setScalar(c.s); cubes.setMatrixAt(i, tm.compose(pv, q, sv)); });
     cubes.instanceMatrix.needsUpdate = true;
     cubes.visible = grid.visible = grid2.visible = camZ < -140 && camZ > -470;
+    let anyTeam = false;
     mascots.forEach((m, i) => {
       const d = camZ - m.s.position.z;
       const op = smooth(34, 18, d) * smooth(0.8, 4, d) * (camZ < VOICE_Z ? 1 : 0);
       m.s.visible = m.g.visible = op > 0.01;
-      m.s.material.opacity = op; m.g.material.opacity = op * 0.3;
-      m.s.material.rotation = Math.sin(time * 0.9 + i) * 0.12;
+      if (m.s.visible) anyTeam = true;
+      m.s.userData.mats.forEach((mt) => { mt.opacity = op; mt.depthWrite = op > 0.98; });
+      m.g.material.opacity = op * 0.3;
+      _me.set(Math.sin(time * 0.7 + i * 1.7) * 0.18, Math.sin(time * 0.55 + i * 1.7) * 0.36, Math.sin(time * 0.9 + i) * 0.12);
+      m.s.quaternion.copy(camera.quaternion).multiply(_mq.setFromEuler(_me));
       m.s.position.y += (Math.sin(time * 1.1 + i) * 0.004);
     });
+    teamLights.visible = anyTeam;
 
     // cards: fade in as you approach, depth-of-field blur near and far
     const far0 = small ? 26 : 34, far1 = small ? 15 : 19;
