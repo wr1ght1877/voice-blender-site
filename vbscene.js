@@ -103,10 +103,29 @@ export function createHero({ small = false } = {}) {
     lg.setAttribute('color', new THREE.BufferAttribute(lc, 3));
     lg.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
     world.add(new THREE.Line(lg, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })));
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: mascotTexture(bot), transparent: true, depthWrite: false, toneMapped: false }));
-    sprite.scale.setScalar(small ? 0.7 : 0.85); sprite.renderOrder = 10; front.add(sprite);
+    const sprite = makeMascot3D(bot, i, small ? 0.7 / 0.85 : 1); front.add(sprite);
     return { i, pg, ps, offs, lg, sprite };
   });
+
+  /* soft toy lighting for the 3D mascots (overlay scene only has these lit meshes) */
+  const hemiL = new THREE.HemisphereLight(0xffffff, 0x3a2a90, 1.0); front.add(hemiL);
+  const keyL = new THREE.DirectionalLight(0xffffff, 2.0); keyL.position.set(-2.5, 4, 6); front.add(keyL);
+  const rimL = new THREE.DirectionalLight(0xb8c8ff, 1.2); rimL.position.set(3, -1, -2); front.add(rimL);
+  /* keep each mascot's face toward the camera (like the old sprites), with a gentle 3D sway */
+  const _q = new THREE.Quaternion(), _pq = new THREE.Quaternion(), _e = new THREE.Euler();
+  let clock = 0, hooked = null;
+  function faceCamera(r, sc, cam) {
+    if (!front.visible) return;
+    front.getWorldQuaternion(_pq).invert();
+    streams.forEach((s) => {
+      const m = s.sprite, t = clock + s.i * 1.7;
+      _e.set(Math.sin(t * 0.7) * 0.18, Math.sin(t * 0.55) * 0.36, Math.sin(clock * 0.8 + s.i) * 0.14);
+      m.quaternion.copy(_pq).multiply(cam.quaternion).multiply(_q.setFromEuler(_e));
+      const bl = (t * 0.37) % 4.2, k = bl < 0.14 ? 1 - Math.sin(bl / 0.14 * Math.PI) * 0.9 : 1;
+      m.userData.eyes.forEach((e) => { e.scale.y = k; });
+    });
+    front.updateMatrixWorld(true);
+  }
 
   const P = new THREE.Vector3();
   function streamPoint(i, t, time, out) {
@@ -145,8 +164,14 @@ export function createHero({ small = false } = {}) {
       const peel = 0.5 + 0.5 * Math.sin(time * 0.5 + s.i * 2.1);
       const rl = Math.hypot(P.x, P.z) || 1;
       s.sprite.position.set(P.x + (P.x / rl) * peel * 0.35, P.y + 0.28 + peel * 0.3, P.z + (P.z / rl) * peel * 0.35);
-      s.sprite.material.rotation = Math.sin(time * 0.8 + s.i) * 0.14;
     });
+    clock = time;
+    const root = front.parent;
+    if (root && root.isScene && hooked !== root) {
+      const prev = root.onBeforeRender;
+      root.onBeforeRender = function (r, sc, cam, ...rest) { faceCamera(r, sc, cam); return prev.call(this, r, sc, cam, ...rest); };
+      hooked = root;
+    }
   }
   function setPixel(h, pr) { vortexMat.uniforms.uPixel.value = h * pr * 0.034; }
   return { world, front, update, setPixel, vortexMat, core };
@@ -172,6 +197,60 @@ export function makeBotShape(i, scale = 1) {
   }
   m.scale.setScalar(scale);
   return m;
+}
+
+/* 3D toy mascots in the Grok Bot style: puffy, rounded, glossy clay, raised white pill eyes.
+   Sized to match the old flat mascot sprites (body radius ~0.17 world units). */
+const MASCOT_S = 0.195 * 0.85;
+function toyMaterial(c) {
+  const col = new THREE.Color(c);
+  return new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.42, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.14, emissive: col.clone().multiplyScalar(0.16) });
+}
+function mascotBody(shape, s, mat) {
+  if (shape === 'ball') return new THREE.Mesh(new THREE.SphereGeometry(s, 40, 28), mat);
+  if (shape === 'square') return new THREE.Mesh(new RoundedBoxGeometry(s * 1.84, s * 1.84, s * 1.25, 6, s * 0.5), mat);
+  if (shape === 'diamond') { const g = new RoundedBoxGeometry(s * 1.64, s * 1.64, s * 1.2, 6, s * 0.46); g.rotateZ(Math.PI / 4); return new THREE.Mesh(g, mat); }
+  if (shape === 'star') {
+    // concave four-point star (superellipse, p < 1); the deep bevel rounds the tips
+    const sh = new THREE.Shape(), n = 160, p = 0.74, R = s * 1.02;
+    for (let k = 0; k <= n; k++) {
+      const a = k / n * Math.PI * 2, c = Math.cos(a), si = Math.sin(a);
+      const r = R / Math.pow(Math.pow(Math.abs(c), p) + Math.pow(Math.abs(si), p), 1 / p);
+      const x = si * r, y = c * r; k ? sh.lineTo(x, y) : sh.moveTo(x, y);
+    }
+    const g = new THREE.ExtrudeGeometry(sh, { depth: s * 0.36, bevelEnabled: true, bevelThickness: s * 0.34, bevelSize: s * 0.2, bevelSegments: 10, curveSegments: 4 });
+    g.center(); g.computeVertexNormals(); return new THREE.Mesh(g, mat);
+  }
+  // cloud: a cluster of squashed spheres
+  const grp = new THREE.Group(), geo = new THREE.SphereGeometry(1, 32, 22);
+  [[-0.56, -0.1, 0.48], [0.02, 0.1, 0.66], [0.58, -0.1, 0.46], [-0.24, -0.3, 0.5], [0.26, -0.3, 0.5], [0, -0.12, 0.62]]
+    .forEach(([x, y, r]) => { const b = new THREE.Mesh(geo, mat); b.position.set(x * s, (y + 0.08) * s, 0); b.scale.set(r * s, r * s, r * s * 0.85); grp.add(b); });
+  return grp;
+}
+export function makeMascot3D(bot, i, scale = 1) {
+  const s = MASCOT_S, root = new THREE.Group();
+  const body = mascotBody(bot.shape, s, toyMaterial(bot.color));
+  root.add(body);
+  // glow halo behind (like the old sprite glow)
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTexture([[0, bot.color + 'aa'], [0.45, bot.color + '44'], [1, bot.color + '00']]), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false }));
+  glow.scale.setScalar(s * 5); glow.position.z = -s * 0.6; glow.renderOrder = 9; root.add(glow);
+  // eyes: white rounded pills, slightly raised from the front surface
+  root.updateMatrixWorld(true);
+  const ray = new THREE.Raycaster(), cl = bot.shape === 'cloud', ey = cl ? -s * 0.04 : s * 0.04, ex = cl ? s * 0.24 : s * 0.32;
+  const eyeGeo = new THREE.CapsuleGeometry(s * 0.12, s * 0.26, 6, 14);
+  const eyeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, emissive: 0xffffff, emissiveIntensity: 0.35 });
+  const eyes = [-1, 1].map((d) => {
+    ray.set(new THREE.Vector3(d * ex, ey, s * 3), new THREE.Vector3(0, 0, -1));
+    const hit = ray.intersectObject(body, true)[0];
+    const pivot = new THREE.Group(); pivot.position.set(d * ex, ey, (hit ? hit.point.z : s * 0.6) + (cl ? s * 0.04 : s * 0.01));
+    const e = new THREE.Mesh(eyeGeo, eyeMat); e.scale.z = 0.5; pivot.add(e);
+    if (hit && hit.face && !cl) { const nrm = hit.face.normal.clone().transformDirection(hit.object.matrixWorld); pivot.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), nrm.lerp(new THREE.Vector3(0, 0, 1), 0.5).normalize()); }
+    root.add(pivot); return pivot;
+  });
+  root.userData.eyes = eyes;
+  root.scale.setScalar(scale);
+  root.traverse((o) => { if (o.isMesh) o.renderOrder = 10; });
+  return root;
 }
 
 /* ---------- textures ---------- */
