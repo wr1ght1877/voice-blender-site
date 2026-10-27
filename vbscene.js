@@ -1,12 +1,11 @@
-/* Voice Blender: shared 3D building blocks (hero vortex, sound-wave bots, textures). */
+/* Voice Blender: shared 3D building blocks (hero vortex, mascots with sideways pill eyes and a sound-wave mouth, glass bot shapes, textures). */
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 const VB = window.VB || (window.VB = {});
 export const BOT_COLORS = ['#2f8bff', '#ff3dc8', '#2ee86f', '#ffa424', '#9b5cff'];
 
-/* Hero: two mirrored particle vortexes, core glow, tiny figure, white waveform, five streams + sound-wave bots.
+/* Hero: two mirrored particle vortexes, core glow, tiny figure, white waveform, five streams + mascots.
    `world` goes in the main (bloomed) scene; `front` holds crisp sprites drawn after bloom. */
 export function createHero({ small = false } = {}) {
   const BOTS = VB.BOTS || [];
@@ -108,9 +107,9 @@ export function createHero({ small = false } = {}) {
     return { i, pg, ps, offs, lg, sprite };
   });
 
-  /* soft lighting for the 3D bots (overlay scene only has these lit meshes) */
+  /* soft toy lighting for the 3D mascots (overlay scene only has these lit meshes) */
   addMascotLights(front);
-  /* keep each bot turned toward the camera, with a gentle 3D sway, and animate its sound waves */
+  /* keep each mascot's face toward the camera (like the old sprites), with a gentle 3D sway */
   const _q = new THREE.Quaternion(), _pq = new THREE.Quaternion(), _e = new THREE.Euler();
   let clock = 0, hooked = null;
   function faceCamera(r, sc, cam) {
@@ -120,7 +119,9 @@ export function createHero({ small = false } = {}) {
       const m = s.sprite, t = clock + s.i * 1.7;
       _e.set(Math.sin(t * 0.7) * 0.18, Math.sin(t * 0.55) * 0.36, Math.sin(clock * 0.8 + s.i) * 0.14);
       m.quaternion.copy(_pq).multiply(cam.quaternion).multiply(_q.setFromEuler(_e));
-      m.userData.update(clock + s.i * 0.9, 0.75);
+      const bl = (t * 0.37) % 4.2, k = bl < 0.14 ? 1 - Math.sin(bl / 0.14 * Math.PI) * 0.9 : 1;
+      m.userData.eyes.forEach((e) => { e.scale.y = k; });
+      if (m.userData.talk) m.userData.talk(t);
     });
     front.updateMatrixWorld(true);
   }
@@ -175,122 +176,56 @@ export function createHero({ small = false } = {}) {
   return { world, front, update, setPixel, vortexMat, core };
 }
 
-/* Sound-wave bots: each bot is its own 3D voice visual in its color (no faces).
-   0 mirrored waveform, 1 radial ring, 2 bar drum on a disc, 3 VU-meter columns, 4 twisted ribbon. */
-const tint = (hex, w) => new THREE.Color(hex).lerp(new THREE.Color('#ffffff'), w);
-let _glowTex = null;
-function glowTexture() {
-  if (_glowTex) return _glowTex;
-  const c = canvas(128, 128), g = c.getContext('2d'), img = g.createImageData(128, 128);
-  for (let y = 0; y < 128; y++) for (let x = 0; x < 128; x++) {
-    const r = Math.hypot(x - 63.5, y - 63.5) / 64, v = r >= 1 ? 0 : Math.exp(-r * r * 5.5) * (1 - r * r) * (1 - r * r);
-    const k = (y * 128 + x) * 4; img.data[k] = img.data[k + 1] = img.data[k + 2] = 255; img.data[k + 3] = Math.round(255 * v);
-  }
-  g.putImageData(img, 0, 0); return (_glowTex = tex(c));
-}
-function glowSprite(color, size, opacity) {
-  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture(), color: new THREE.Color(color), transparent: true, opacity, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending }));
-  s.scale.setScalar(size); return s;
-}
-function makeBar(r, mat) {
-  const g = new THREE.Group();
-  const cyl = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 1, 16, 1, true), mat);
-  const capGeo = new THREE.SphereGeometry(r, 16, 8);
-  const a = new THREE.Mesh(capGeo, mat), b = new THREE.Mesh(capGeo, mat);
-  g.add(cyl, a, b);
-  g.userData.setLen = (h) => { h = Math.max(h, 0.001); cyl.scale.y = h; a.position.y = h / 2; b.position.y = -h / 2; };
-  g.userData.setLen(1); return g;
-}
-export function soundwaveBot(i, { coreGlow: withCoreGlow = true } = {}) {
-  const color = new THREE.Color(BOT_COLORS[i]);
-  const root = new THREE.Group();
-  const mat = new THREE.MeshPhysicalMaterial({ color, emissive: color, emissiveIntensity: 0.32, roughness: 0.22, metalness: 0.15, clearcoat: 1, clearcoatRoughness: 0.1 });
-  const core = new THREE.Mesh(new THREE.SphereGeometry(0.15, 24, 16), new THREE.MeshBasicMaterial({ color: tint(BOT_COLORS[i], 0.75) }));
-  const coreGlow = withCoreGlow ? glowSprite(color, 1.3, 0.85) : null;
-  const bars = [];
-  const add = (obj, base, phase, place) => { root.add(obj); bars.push({ obj, base, phase, place }); };
-  let holder = root;
-  if (i === 0) {
-    const n = 9;
-    for (let k = 0; k < n; k++) {
-      const env = Math.exp(-Math.pow((k - 4) / 2.6, 2)), b = makeBar(0.075, mat); b.position.x = (k - (n - 1) / 2) * 0.24;
-      add(b, 0.35 + 1.45 * env * (0.75 + 0.25 * Math.cos(k * 2.1)), k * 0.7, (h) => b.userData.setLen(h));
-    }
-    core.position.set(0, 0, 0.32);
-  } else if (i === 1) {
-    const n = 18;
-    for (let k = 0; k < n; k++) {
-      const ang = (k / n) * Math.PI * 2, b = makeBar(0.06, mat), dx = Math.cos(ang), dy = Math.sin(ang); b.rotation.z = ang - Math.PI / 2;
-      add(b, k % 2 ? 0.3 : 0.55 + 0.15 * Math.sin(k), k * 0.9, (h) => { b.userData.setLen(h); const r = 0.42 + h / 2; b.position.set(dx * r, dy * r, 0); });
-    }
-    root.add(new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.035, 12, 48), mat));
-  } else if (i === 2) {
-    const n = 16, R = 0.72; holder = new THREE.Group(); holder.rotation.x = 0.42; root.add(holder);
-    const disc = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.16, R + 0.2, 0.08, 40), new THREE.MeshPhysicalMaterial({ color: '#141a3a', roughness: 0.3, metalness: 0.6, clearcoat: 1 }));
-    disc.position.y = -0.62; holder.add(disc);
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(R + 0.18, 0.02, 8, 48), new THREE.MeshBasicMaterial({ color: tint(BOT_COLORS[i], 0.3) }));
-    rim.rotation.x = Math.PI / 2; rim.position.y = -0.58; holder.add(rim);
-    for (let k = 0; k < n; k++) {
-      const ang = (k / n) * Math.PI * 2, b = makeBar(0.065, mat);
-      b.position.set(Math.cos(ang) * R, 0, Math.sin(ang) * R); holder.add(b);
-      bars.push({ obj: b, base: 0.45 + 0.75 * (0.5 + 0.5 * Math.sin(ang * 2 + 0.6)), phase: k * 0.6, place: (h) => { b.userData.setLen(h); b.position.y = -0.55 + h / 2; } });
-    }
-    core.position.set(0, -0.05, 0);
-  } else if (i === 3) {
-    const seg = new RoundedBoxGeometry(0.24, 0.13, 0.24, 2, 0.05);
-    [2, 3, 5, 3, 2].forEach((cnt, c) => {
-      const col = new THREE.Group(); col.position.x = (c - 2) * 0.33; root.add(col);
-      for (let s = -cnt; s <= cnt; s++) { if (!s) continue; const m = new THREE.Mesh(seg, mat); m.position.y = Math.sign(s) * (Math.abs(s) - 0.5) * 0.17; col.add(m); }
-      bars.push({ obj: col, base: 1, phase: c * 1.3, place: (h) => col.scale.set(1, 0.85 + 0.15 * h, 1) });
-    });
-    core.position.set(0, 0, 0.3);
-  } else {
-    const n = 15;
-    for (let k = 0; k < n; k++) {
-      const piv = new THREE.Group(), b = makeBar(0.058, mat); piv.add(b);
-      piv.position.x = (k - (n - 1) / 2) * 0.15; piv.rotation.x = k * 0.2 - 1.4; root.add(piv);
-      const env = Math.sin((k + 0.5) / n * Math.PI);
-      bars.push({ obj: piv, base: 0.3 + 1.4 * env * (0.7 + 0.3 * Math.sin(k * 1.7)), phase: k * 0.5, place: (h) => b.userData.setLen(h) });
-    }
-  }
-  holder.add(core); if (coreGlow) { coreGlow.position.copy(core.position); holder.add(coreGlow); }
-  root.userData.fade = 1;
-  root.userData.update = (t, talk = 0.6) => {
-    for (const b of bars) b.place(b.base * (0.72 + 0.28 * talk * (0.5 + 0.5 * Math.sin(t * 5.5 + b.phase))));
-    const p = 0.75 + 0.25 * Math.sin(t * 4.2 + i);
-    core.scale.setScalar(0.85 + 0.3 * p);
-    if (coreGlow) coreGlow.material.opacity = (0.45 + 0.4 * p) * root.userData.fade;
-  };
-  root.userData.update(1.3 * i, 0.6);
-  return root;
-}
-
-/* Static sound-wave bot for background floaters: same look, merged into a few meshes (cheap to draw). */
-const _floatGeo = {};
-function floatParts(i) {
-  if (_floatGeo[i]) return _floatGeo[i];
-  const bot = soundwaveBot(i, { coreGlow: false }); bot.updateMatrixWorld(true);
-  const groups = new Map();
-  bot.traverse((o) => {
-    if (!o.isMesh) return;
-    const g = o.geometry.clone().applyMatrix4(o.matrixWorld);
-    for (const k of Object.keys(g.attributes)) if (!['position', 'normal'].includes(k)) g.deleteAttribute(k);
-    const key = o.material.uuid; if (!groups.has(key)) groups.set(key, { mat: o.material, geos: [] });
-    groups.get(key).geos.push(g.index ? g.toNonIndexed() : g);
-  });
-  return (_floatGeo[i] = [...groups.values()].map(({ mat, geos }) => ({ mat, geo: mergeGeometries(geos) })));
+/* Glossy 3D versions of the five bot shapes. */
+export function glassMaterial(c, opacity = 0.88) {
+  return new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.18, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.1, emissive: new THREE.Color(c).multiplyScalar(0.25), transparent: opacity < 1, opacity });
 }
 export function makeBotShape(i, scale = 1) {
-  const g = new THREE.Group();
-  floatParts(i).forEach(({ mat, geo }) => g.add(new THREE.Mesh(geo, mat)));
-  g.scale.setScalar(scale * 0.72);
-  return g;
+  const c = BOT_COLORS[i];
+  let m;
+  if (i === 0) m = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 24), glassMaterial(c));
+  else if (i === 1) {
+    const s = new THREE.Shape(), R = 1, k = 0.3;
+    s.moveTo(0, R); s.quadraticCurveTo(k, k, R, 0); s.quadraticCurveTo(k, -k, 0, -R); s.quadraticCurveTo(-k, -k, -R, 0); s.quadraticCurveTo(-k, k, 0, R);
+    m = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 0.35, bevelEnabled: true, bevelSize: 0.08, bevelThickness: 0.08, bevelSegments: 4, curveSegments: 16 }).center(), glassMaterial(c));
+  } else if (i === 2) m = new THREE.Mesh(new RoundedBoxGeometry(1.2, 1.2, 1.2, 4, 0.3), glassMaterial(c));
+  else if (i === 3) { m = new THREE.Mesh(new RoundedBoxGeometry(1.1, 1.1, 1.1, 4, 0.25), glassMaterial(c)); m.rotation.z = Math.PI / 4; }
+  else {
+    m = new THREE.Group();
+    [[-0.55, -0.1, 0.45], [0, 0.15, 0.62], [0.55, -0.08, 0.45], [0, -0.3, 0.5]].forEach(([x, y, s]) => { const b = new THREE.Mesh(new THREE.SphereGeometry(s, 24, 18), glassMaterial(c)); b.position.set(x, y, 0); m.add(b); });
+  }
+  m.scale.setScalar(scale);
+  return m;
 }
 
-/* The bots in the opening tornado and the team section: animated sound-wave bots.
-   Sized to match the old mascot sprites (body radius ~0.17 world units). */
+/* 3D toy mascots: puffy, rounded, glossy clay, raised white pill eyes.
+   Sized to match the old flat mascot sprites (body radius ~0.17 world units). */
 const MASCOT_S = 0.195 * 0.85;
-const BOT_K = 1.3;    // sound-wave bot units -> mascot units (about the old mascot width)
+function toyMaterial(c) {
+  const col = new THREE.Color(c);
+  return new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.42, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.14, emissive: col.clone().multiplyScalar(0.16) });
+}
+function mascotBody(shape, s, mat) {
+  if (shape === 'ball') return new THREE.Mesh(new THREE.SphereGeometry(s, 40, 28), mat);
+  if (shape === 'square') return new THREE.Mesh(new RoundedBoxGeometry(s * 1.84, s * 1.84, s * 1.25, 6, s * 0.5), mat);
+  if (shape === 'diamond') { const g = new RoundedBoxGeometry(s * 1.64, s * 1.64, s * 1.2, 6, s * 0.46); g.rotateZ(Math.PI / 4); return new THREE.Mesh(g, mat); }
+  if (shape === 'star') {
+    // concave four-point star (superellipse, p < 1); the deep bevel rounds the tips
+    const sh = new THREE.Shape(), n = 160, p = 0.74, R = s * 1.02;
+    for (let k = 0; k <= n; k++) {
+      const a = k / n * Math.PI * 2, c = Math.cos(a), si = Math.sin(a);
+      const r = R / Math.pow(Math.pow(Math.abs(c), p) + Math.pow(Math.abs(si), p), 1 / p);
+      const x = si * r, y = c * r; k ? sh.lineTo(x, y) : sh.moveTo(x, y);
+    }
+    const g = new THREE.ExtrudeGeometry(sh, { depth: s * 0.36, bevelEnabled: true, bevelThickness: s * 0.34, bevelSize: s * 0.2, bevelSegments: 10, curveSegments: 4 });
+    g.center(); g.computeVertexNormals(); return new THREE.Mesh(g, mat);
+  }
+  // cloud: a cluster of squashed spheres
+  const grp = new THREE.Group(), geo = new THREE.SphereGeometry(1, 32, 22);
+  [[-0.56, -0.1, 0.48], [0.02, 0.1, 0.66], [0.58, -0.1, 0.46], [-0.24, -0.3, 0.5], [0.26, -0.3, 0.5], [0, -0.12, 0.62]]
+    .forEach(([x, y, r]) => { const b = new THREE.Mesh(geo, mat); b.position.set(x * s, (y + 0.08) * s, 0); b.scale.set(r * s, r * s, r * s * 0.85); grp.add(b); });
+  return grp;
+}
 export function addMascotLights(group) {
   const hemiL = new THREE.HemisphereLight(0xffffff, 0x3a2a90, 1.0); group.add(hemiL);
   const keyL = new THREE.DirectionalLight(0xffffff, 2.0); keyL.position.set(-2.5, 4, 6); group.add(keyL);
@@ -300,15 +235,39 @@ export function addMascotLights(group) {
 export const MASCOT_SIZE = MASCOT_S;
 export function makeMascot3D(bot, i, scale = 1, { glow: withGlow = true } = {}) {
   const s = MASCOT_S, root = new THREE.Group();
-  const body = soundwaveBot(i); body.scale.setScalar(s * BOT_K);
+  const body = mascotBody(bot.shape, s, toyMaterial(bot.color));
   root.add(body);
-  if (withGlow) {
-    const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTexture([[0, bot.color + 'aa'], [0.45, bot.color + '44'], [1, bot.color + '00']]), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false }));
-    glow.scale.setScalar(s * 5); glow.position.z = -s * 0.6; glow.renderOrder = 9; root.add(glow);
-  }
-  root.userData.bot = body;
-  root.userData.update = (t, talk) => body.userData.update(t, talk);
-  root.userData.setFade = (f) => { body.userData.fade = f; };
+  // glow halo behind (like the old sprite glow)
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTexture([[0, bot.color + 'aa'], [0.45, bot.color + '44'], [1, bot.color + '00']]), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false }));
+  glow.scale.setScalar(s * 5); glow.position.z = -s * 0.6; glow.renderOrder = 9; if (withGlow) root.add(glow);
+  // eyes: white rounded pills, slightly raised from the front surface
+  root.updateMatrixWorld(true);
+  const ray = new THREE.Raycaster(), cl = bot.shape === 'cloud', ey = cl ? -s * 0.04 : s * 0.16, ex = cl ? s * 0.28 : s * 0.36;
+  // sideways (horizontal) pill eyes
+  const eyeGeo = new THREE.CapsuleGeometry(s * 0.125, s * 0.17, 6, 14); eyeGeo.rotateZ(Math.PI / 2);
+  const eyeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, emissive: 0xffffff, emissiveIntensity: 0.35 });
+  const eyes = [-1, 1].map((d) => {
+    ray.set(new THREE.Vector3(d * ex, ey, s * 3), new THREE.Vector3(0, 0, -1));
+    const hit = ray.intersectObject(body, true)[0];
+    const pivot = new THREE.Group(); pivot.position.set(d * ex, ey, (hit ? hit.point.z : s * 0.6) + (cl ? s * 0.04 : s * 0.01));
+    const e = new THREE.Mesh(eyeGeo, eyeMat); e.scale.z = 0.5; pivot.add(e);
+    if (hit && hit.face && !cl) { const nrm = hit.face.normal.clone().transformDirection(hit.object.matrixWorld); pivot.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), nrm.lerp(new THREE.Vector3(0, 0, 1), 0.5).normalize()); }
+    root.add(pivot); return pivot;
+  });
+  root.userData.eyes = eyes;
+  // small glowing sound-wave mouth: five rounded bars that pulse gently
+  const my = cl ? -s * 0.4 : -s * 0.3, bw = s * 0.075, bgap = s * 0.05, bh = s * 0.3;
+  const mouthMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, emissive: 0xffffff, emissiveIntensity: 1.0 });
+  const mouth = [0.32, 0.62, 1, 0.7, 0.4].map((hh, j) => {
+    const x = (j - 2) * (bw + bgap);
+    ray.set(new THREE.Vector3(x, my, s * 3), new THREE.Vector3(0, 0, -1));
+    const hit = ray.intersectObject(body, true)[0];
+    const bar = new THREE.Mesh(new RoundedBoxGeometry(bw, bh * hh, s * 0.07, 3, bw * 0.48), mouthMat);
+    bar.position.set(x, my, (hit ? hit.point.z : s * 0.6) + s * 0.01);
+    if (hit && hit.face && !cl) { const nrm = hit.face.normal.clone().transformDirection(hit.object.matrixWorld); bar.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), nrm.lerp(new THREE.Vector3(0, 0, 1), 0.6).normalize()); }
+    bar.userData.phase = j * 1.3; root.add(bar); return bar;
+  });
+  root.userData.talk = (t) => { mouth.forEach((b) => { b.scale.y = 0.75 + 0.25 * Math.sin(t * 6 + b.userData.phase); }); };
   root.scale.setScalar(scale);
   root.traverse((o) => { if (o.isMesh) o.renderOrder = 10; });
   return root;

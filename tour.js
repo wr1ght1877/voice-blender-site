@@ -126,7 +126,7 @@ async function start() {
   });
   tunnel.add(new THREE.Points(tg, tunnelMat));
 
-  /* 3. floating sound-wave bots + confetti through the bright and dark zones */
+  /* 3. floating glossy bot shapes + confetti through the bright and dark zones */
   const floaters = [];
   const addFloat = (i, x, y, z, s) => { const m = makeBotShape(i, s); m.position.set(x, y, z); m.userData.b = new THREE.Vector3(x, y, z); m.userData.r = Math.random() * 6; scene.add(m); floaters.push(m); };
   let k = 0;
@@ -159,7 +159,7 @@ async function start() {
   for (let i = 0; i < CUBES; i++) cubeData.push({ x: (Math.random() < 0.5 ? -1 : 1) * (5 + Math.random() * 10), y: -4 + Math.random() * 11, z: -160 - Math.random() * 280, s: 0.4 + Math.random() * 1.2, r: Math.random() * 6 });
   scene.add(cubes);
 
-  /* team bots: 3D sound-wave bots like the opening tornado (crisp, in the overlay, with their own lights) + soft glow (bloomed) */
+  /* team mascots: 3D toy bots like the opening tornado (crisp, in the overlay, with their own lights) + soft glow (bloomed) */
   const BOTS = VB.BOTS || [];
   const teamLights = addMascotLights(new THREE.Group()); teamLights.visible = false; overlay.add(teamLights);
   const M3 = 0.195 / MASCOT_SIZE, _mq = new THREE.Quaternion(), _me = new THREE.Euler();            // old sprite scale -> 3D mascot scale (same on-screen size)
@@ -373,7 +373,7 @@ async function start() {
       m.s.visible = m.g.visible = op > 0.01;
       if (m.s.visible) anyTeam = true;
       m.s.userData.mats.forEach((mt) => { mt.opacity = op; mt.depthWrite = op > 0.98; });
-      m.s.userData.setFade(op); m.s.userData.update(time + i * 0.9, 0.75);
+      if (m.s.visible && m.s.userData.talk) m.s.userData.talk(time + i * 0.9);
       m.g.material.opacity = op * 0.3;
       _me.set(Math.sin(time * 0.7 + i * 1.7) * 0.18, Math.sin(time * 0.55 + i * 1.7) * 0.36, Math.sin(time * 0.9 + i) * 0.12);
       m.s.quaternion.copy(camera.quaternion).multiply(_mq.setFromEuler(_me));
