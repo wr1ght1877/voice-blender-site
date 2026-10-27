@@ -334,6 +334,8 @@ html.tour .plain-only{position:absolute!important;width:1px!important;height:1px
 .tc-bot{text-align:left}
 .tc-bot h3{font-size:30px;color:var(--c);filter:brightness(1.3);margin-top:0}
 .tc-bot .sh{font-size:15px;color:#9aa3cc!important;margin-bottom:8px}
+.tc-line{text-align:center}
+.tc-line p{font-size:40px;line-height:1.35;font-weight:600;letter-spacing:-.01em;color:#dbe2ff;text-shadow:0 2px 24px rgba(5,8,30,.9),0 0 34px rgba(120,150,255,.35)}
 .tc-note{text-align:center}
 .tc-note p{display:inline-block;padding:10px 18px;border-radius:999px;background:rgba(255,211,138,.14);border:1px solid rgba(255,211,138,.5);color:#ffe1a8;font-weight:700;font-size:16px}
 .tc-note.light p{background:rgba(255,255,255,.85);border-color:rgba(255,164,36,.6);color:#6b3d00}
