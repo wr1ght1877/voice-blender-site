@@ -3,11 +3,11 @@
   'use strict';
 
   var BOTS = [
-    { name: 'M&M',       color: '#2f8bff', shape: 'ball' },
-    { name: 'Hollywood', color: '#ff3dc8', shape: 'star' },
-    { name: 'Scalper',   color: '#2ee86f', shape: 'square' },
-    { name: 'Ledger',    color: '#ffa424', shape: 'diamond' },
-    { name: 'Grok Bot',  color: '#9b5cff', shape: 'cloud' }
+    { name: 'Researcher', color: '#2f8bff', shape: 'ball' },
+    { name: 'Writer',    color: '#ff3dc8', shape: 'star' },
+    { name: 'Assistant', color: '#2ee86f', shape: 'square' },
+    { name: 'Builder',   color: '#ffa424', shape: 'diamond' },
+    { name: 'Planner',   color: '#9b5cff', shape: 'cloud' }
   ];
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

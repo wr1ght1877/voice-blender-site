@@ -197,7 +197,7 @@ export function makeBotShape(i, scale = 1) {
   return m;
 }
 
-/* 3D toy mascots in the Grok Bot style: puffy, rounded, glossy clay, raised white pill eyes.
+/* 3D toy mascots: puffy, rounded, glossy clay, raised white pill eyes.
    Sized to match the old flat mascot sprites (body radius ~0.17 world units). */
 const MASCOT_S = 0.195 * 0.85;
 function toyMaterial(c) {
