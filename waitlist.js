@@ -3,7 +3,7 @@
   "use strict";
   // Turnstile site key (public). Leave empty until a Turnstile widget exists; the server
   // only demands a token when TURNSTILE_SECRET is set.
-  var TURNSTILE_SITEKEY = "";
+  var TURNSTILE_SITEKEY = "0x4AAAAAAFnmlxdNSOjbtnCw";
   var host = location.hostname;
   var sameOrigin = /(^|\.)voiceblender\.pages\.dev$/.test(host) || host === "localhost" || host === "127.0.0.1";
   var API = sameOrigin ? "" : "https://voiceblender.pages.dev";
