@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" class="plain">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy · Voice Blender</title>
+  <meta name="description" content="How Voice Blender handles your waitlist signup, in plain language.">
+  <meta name="theme-color" content="#070a1f">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .privacy{padding:calc(var(--nav-h) + 40px) clamp(18px,4vw,40px) 60px}
+    .privacy-card{padding:clamp(24px,5vw,48px)}
+    .privacy h1{margin:0 0 8px;font-size:clamp(2rem,5vw,2.8rem);line-height:1.15}
+    .privacy h2{margin:30px 0 8px;font-size:1.2rem}
+    .privacy p,.privacy li{color:#d8ddf5}
+    .privacy ul{padding-left:1.2em;margin:8px 0}
+    .privacy li{margin:4px 0}
+    .privacy a{color:#9fc4ff}
+    .privacy .lede{font-size:1.08rem}
+    .privacy .note{margin-top:28px;font-size:.92rem;opacity:.8}
+    .nav{background:rgba(9,11,36,.74);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+  </style>
+</head>
+<body>
+  <header class="nav" role="banner">
+    <a class="wordmark" href="./" aria-label="Voice Blender home">
+      <span class="wm-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <span>Voice&nbsp;Blender</span>
+    </a>
+    <a class="btn glass" href="./#waitlist">Back to the site</a>
+  </header>
+
+  <main id="main" class="privacy">
+    <div class="wrap narrow">
+      <article class="privacy-card glass">
+        <p class="kicker">Privacy</p>
+        <h1>Your waitlist signup, in plain words</h1>
+        <p class="lede">We only use your email for Voice Blender updates. We never sell it. You can unsubscribe or ask us to delete it anytime.</p>
+
+        <h2>What we collect when you join</h2>
+        <ul>
+          <li><strong>Your email address.</strong></li>
+          <li><strong>Your first name</strong>, only if you type one in. It's optional.</li>
+          <li><strong>Your referral code</strong>, the short code in your personal link.</li>
+          <li><strong>Who referred you</strong> (their referral code), if you joined through a friend's link, and <strong>how many friends joined with your link</strong>.</li>
+          <li><strong>When you signed up</strong>, and which of our two site addresses you used.</li>
+          <li><strong>A scrambled (hashed) version of your network address.</strong> We don't store your actual IP address. We keep a one-way hash of it so we can limit how many signups come from one network in an hour and spot people referring themselves.</li>
+        </ul>
+
+        <h2>Why we collect it</h2>
+        <ul>
+          <li>To email you when Voice Blender opens, plus the occasional update about it.</li>
+          <li>To run the referral program: when a friend you referred subscribes after launch, you get a free month of your plan.</li>
+          <li>To keep spam and fake signups off the list.</li>
+        </ul>
+        <p>Everyone on the waitlist gets in at launch. We don't use your information for ads, and we don't sell it, rent it, or give it to anyone to market to you.</p>
+
+        <h2>The human check (Cloudflare Turnstile)</h2>
+        <p>The signup form uses Cloudflare Turnstile to tell people from bots. When you use the form, Cloudflare looks at basic information from your browser to make that check. Cloudflare handles that under <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">its own privacy policy</a>.</p>
+
+        <h2>Where it's kept</h2>
+        <p>Your signup is stored in a database on Cloudflare, which also runs the signup form. The website itself is hosted on GitHub Pages and Cloudflare Pages, and the 3D graphics library loads from jsDelivr. Like any website host, these services can see basic request details such as your IP address when you visit.</p>
+        <p>Your browser also remembers a few small things on your own device: your referral code (so you can see your link again), who referred you, and your sound and "skip the 3D tour" choices. We don't use tracking cookies or analytics.</p>
+
+        <h2>How long we keep it</h2>
+        <p>We keep your signup until you ask us to remove it, or until we no longer need it for Voice Blender.</p>
+
+        <h2>Unsubscribe or delete your info</h2>
+        <p>Every email we send will include a way to unsubscribe. To have your signup deleted, or to ask what we have about you, send a direct message to <a href="https://x.com/VoiceBlender" rel="noopener">@VoiceBlender on X</a> with the email address you signed up with. We'll remove it.</p>
+
+        <h2>Changes</h2>
+        <p>If this changes in a way that matters, we'll update this page and the date below.</p>
+
+        <p class="note">This is a plain-language summary of how the Voice Blender waitlist handles your information. Last updated October 27, 2026.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap foot">
+      <a class="wordmark" href="./" aria-label="Voice Blender home">
+        <span class="wm-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        <span>Voice&nbsp;Blender</span>
+      </a>
+      <p>© 2026 Voice Blender · Patent pending</p>
+      <a class="x-link" href="https://x.com/VoiceBlender" rel="noopener">@VoiceBlender on X</a>
+    </div>
+  </footer>
+</body>
+</html>
