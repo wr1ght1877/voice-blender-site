@@ -68,8 +68,10 @@ export function createHero({ small = false } = {}) {
   core.scale.setScalar(2.4); world.add(core);
 
   const fig = new THREE.Sprite(new THREE.SpriteMaterial({ map: figureTexture(), transparent: true, depthWrite: false, toneMapped: false }));
-  fig.scale.set(0.34, 0.68, 1); fig.position.set(0, -0.03, 0.05);
+  fig.scale.set(0.42, 0.84, 1); fig.position.set(0, 0, 0.05);
   fig.renderOrder = 5; front.add(fig);
+  const hole = new THREE.Sprite(new THREE.SpriteMaterial({ map: holeTexture(), transparent: true, depthWrite: false, depthTest: false, toneMapped: false }));
+  hole.scale.setScalar(0.034); hole.position.set(0, 0, 0.06); hole.renderOrder = 6; front.add(hole);
 
   const voice = new THREE.Group(); world.add(voice);
   const BARS = small ? 29 : 41, WAVE_W = 2.3, WAVE_Y = 1.25;
@@ -149,7 +151,7 @@ export function createHero({ small = false } = {}) {
     });
   }
   function setPixel(h, pr) { vortexMat.uniforms.uPixel.value = h * pr * 0.034; }
-  return { world, front, update, setPixel, vortexMat, core };
+  return { world, front, update, setPixel, vortexMat, core, hole };
 }
 
 /* Glossy 3D versions of the five bot shapes. */
@@ -201,22 +203,18 @@ export function mascotTexture(bot, px = 256) {
   const t = tex(c); t.anisotropy = 4; return t;
 }
 function figureTexture() {
-  const w = 128, h = 256, c = canvas(w, h), g = c.getContext('2d');
-  const cx = w / 2, headR = 13, hy = h / 2 - 4;
-  g.shadowColor = 'rgba(140,195,255,1)'; g.shadowBlur = 14; g.fillStyle = '#02030c';
-  for (let pass = 0; pass < 2; pass++) {
-    g.beginPath(); g.arc(cx, hy, headR, 0, Math.PI * 2); g.fill();
-    const top = hy + headR * 0.9, sw = 22, fh = 100;
-    g.beginPath();
-    g.moveTo(cx - 5, top); g.lineTo(cx + 5, top);
-    g.quadraticCurveTo(cx + sw, top + 3, cx + sw, top + 12);
-    g.lineTo(cx + sw * 0.8, top + fh * 0.45); g.lineTo(cx + sw * 0.5, top + fh * 0.47);
-    g.lineTo(cx + sw * 0.55, top + fh * 0.86); g.lineTo(cx + sw * 0.12, top + fh * 0.86);
-    g.lineTo(cx, top + fh * 0.5); g.lineTo(cx - sw * 0.12, top + fh * 0.86);
-    g.lineTo(cx - sw * 0.55, top + fh * 0.86); g.lineTo(cx - sw * 0.5, top + fh * 0.47);
-    g.lineTo(cx - sw * 0.8, top + fh * 0.45); g.lineTo(cx - sw, top + 12);
-    g.quadraticCurveTo(cx - sw, top + 3, cx - 5, top); g.closePath(); g.fill();
-    g.shadowBlur = 0;
-  }
+  // glowing woman; her black-hole mouth sits exactly at the texture center (= the vortex center)
+  const w = 512, h = 1024, c = canvas(w, h), g = c.getContext('2d');
+  VB.drawWoman(g, w / 2, h / 2, 540);
+  return tex(c);
+}
+
+/* Black-hole mouth for the dive: dark core with a glowing accretion ring. */
+export function holeTexture() {
+  const c = canvas(256, 256), g = c.getContext('2d');
+  const gr = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(0.42, 'rgba(0,0,0,1)'); gr.addColorStop(0.5, 'rgba(255,255,255,1)');
+  gr.addColorStop(0.58, 'rgba(150,205,255,.85)'); gr.addColorStop(0.78, 'rgba(110,130,255,.25)'); gr.addColorStop(1, 'rgba(90,100,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
   return tex(c);
 }

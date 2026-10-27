@@ -46,6 +46,10 @@
   <a class="tour-skip" id="tour-skip" href="?plain">Skip the 3D tour</a>
   <a class="tour-take" id="tour-take" href="?tour">Take the 3D tour</a>
 
+  <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Turn the beat on">
+    <span class="st-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="st-label">Sound off</span>
+  </button>
+
   <header class="nav" id="nav">
     <a class="wordmark" href="#top" aria-label="Voice Blender, back to top">
       <span class="wm-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
@@ -73,7 +77,6 @@
         <canvas id="vortex" class="hero2d"></canvas>
       </div>
       <div class="hero-copy">
-        <p class="eyebrow"><span class="dot"></span> Voice Blender · Coming soon</p>
         <h1 id="hero-title">Summon your whole team of bots in one call.</h1>
         <p class="tagline">Stay in control of your team with one voice.</p>
         <p class="sub">Call a bot by name and it answers in its own voice. The bots take turns, so nobody talks over each other or over you.</p>
@@ -91,6 +94,7 @@
         <div id="tour-gl" class="tour-gl"></div>
         <div id="tour-css" class="tour-css"></div>
         <div class="tour-flash"></div>
+        <div class="tour-hole"></div>
       </div>
       <div id="tour-cards" class="tour-cards">
         <!-- tunnel -->
@@ -189,25 +193,23 @@
         <div class="tc tc-head" data-z="-462" data-w="760" data-y="1.8" data-theme="light">
           <p class="tk">Pricing</p>
           <h2>Pick your band size.</h2>
-          <p class="tc-soon"><span class="soon">Coming soon</span> Plans not available yet.</p>
         </div>
         <div class="tc tc-plan" data-z="-492" data-plan="0" data-w="360" data-theme="light" style="--c:var(--cyan);--c2:var(--blue)">
           <h3>Yap</h3><p class="pr">Free</p><p class="for">One bot, queue only</p>
           <ul><li><b>1</b> bot per call</li><li>Reply queue</li><li class="no">No voice mixing or turn-taking</li></ul>
-          <span class="pbtn">Coming soon</span>
+          <a class="pbtn" href="#waitlist" tabindex="-1">Join waitlist</a>
         </div>
         <div class="tc tc-plan featured" data-z="-492" data-plan="1" data-w="360" data-theme="light" style="--c:var(--magenta);--c2:var(--violet)">
           <span class="tag">Most popular</span>
           <h3>Chorus</h3><p class="pr">$20<span>/mo</span></p><p class="for">Three bots, with the blender and turn-taking</p>
           <ul><li>Up to <b>3</b> bots per call</li><li>Full voice blender: a separate voice per bot</li><li>Turn-taking mixer (pauses and pitch drops)</li></ul>
-          <span class="pbtn">Coming soon</span>
+          <a class="pbtn" href="#waitlist" tabindex="-1">Join waitlist</a>
         </div>
         <div class="tc tc-plan" data-z="-492" data-plan="2" data-w="360" data-theme="light" style="--c:var(--orange);--c2:var(--green)">
           <h3>Symphony</h3><p class="pr">$50<span>/mo</span></p><p class="for">Unlimited bots, priority queue, attribution proof</p>
           <ul><li><b>Unlimited</b> bots per call</li><li>Everything in Chorus</li><li>Priority queue</li><li>Attribution and proof, such as OpenTimestamps stamping</li></ul>
-          <span class="pbtn">Coming soon</span>
+          <a class="pbtn" href="#waitlist" tabindex="-1">Join waitlist</a>
         </div>
-        <div class="tc tc-note light" data-z="-494" data-y="-3.4" data-w="640" data-theme="light" data-plan-note="1"><p>Coming soon — plans not available yet. Draft pricing; it may change before launch. Nothing to buy here yet.</p></div>
 
         <!-- end -->
         <div class="tc tc-end" data-z="-541" data-y="-2.7" data-w="900" data-theme="dark"><p>Stay in control of your team with one voice.</p></div>
@@ -427,7 +429,6 @@
         <div class="head reveal center">
           <p class="kicker">Pricing</p>
           <h2 id="pricing-title">Pick your band size.</h2>
-          <p class="soon-note"><span class="soon">Coming soon</span> Plans not available yet.</p>
         </div>
         <div class="plans">
           <article class="plan glass tilt reveal" data-tilt style="--c:var(--cyan);--c2:var(--blue)" aria-labelledby="p-yap">
@@ -441,7 +442,7 @@
               <li>Reply queue</li>
               <li class="no">No voice mixing or turn-taking</li>
             </ul>
-            <span class="btn plan-btn layer" style="--z:35px" aria-disabled="true">Coming soon</span>
+            <a class="btn plan-btn layer" style="--z:35px" href="#waitlist">Join waitlist</a>
           </article>
           <article class="plan featured glass tilt reveal" data-tilt style="--c:var(--magenta);--c2:var(--violet)" aria-labelledby="p-chorus">
             <span class="tag layer" style="--z:70px">Most popular</span>
@@ -455,7 +456,7 @@
               <li>Full voice blender: a separate voice per bot</li>
               <li>Turn-taking mixer (pauses and pitch drops)</li>
             </ul>
-            <span class="btn plan-btn layer" style="--z:35px" aria-disabled="true">Coming soon</span>
+            <a class="btn plan-btn layer" style="--z:35px" href="#waitlist">Join waitlist</a>
           </article>
           <article class="plan glass tilt reveal" data-tilt style="--c:var(--orange);--c2:var(--green)" aria-labelledby="p-symphony">
             <div class="plan-top layer" style="--z:40px">
@@ -469,7 +470,7 @@
               <li>Priority queue</li>
               <li>Attribution and proof, such as OpenTimestamps stamping</li>
             </ul>
-            <span class="btn plan-btn layer" style="--z:35px" aria-disabled="true">Coming soon</span>
+            <a class="btn plan-btn layer" style="--z:35px" href="#waitlist">Join waitlist</a>
           </article>
         </div>
         <div class="compare glass reveal" role="region" aria-labelledby="cmp-title" tabindex="0">
@@ -485,7 +486,6 @@
             </tbody>
           </table>
         </div>
-        <p class="fine center">Coming soon — plans not available yet. Draft pricing; it may change before launch. Nothing to buy here yet.</p>
       </div>
     </section>
 
@@ -565,6 +565,7 @@
   <script src="mascots.js"></script>
   <script src="vortex2d.js"></script>
   <script src="script.js"></script>
+  <script src="sound.js"></script>
   <script type="module" src="hero3d.js"></script>
   <script type="module" src="tour.js"></script>
 </body>

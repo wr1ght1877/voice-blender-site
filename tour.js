@@ -44,6 +44,7 @@ async function start() {
   const glHost = document.getElementById('tour-gl');
   const cssHost = document.getElementById('tour-css');
   const flash = document.querySelector('.tour-flash');
+  const hole = document.querySelector('.tour-hole');
   const heroCopy = document.querySelector('.hero-copy');
   const heroCue = document.querySelector('.tour-cue');
   const dotsNav = document.querySelector('.tour-dots');
@@ -320,7 +321,7 @@ async function start() {
     const camZ = zAt(cur);
     mouse.x += (mouse.tx - mouse.x) * 0.05; mouse.y += (mouse.ty - mouse.y) * 0.05;
     // calm the camera while threading the letter gaps
-    const calm = Math.min(smooth(3, 12, Math.abs(camZ - VOICE_Z + 2)), smooth(3, 12, Math.abs(camZ - PLANS_Z + 2)));
+    const calm = Math.min(smooth(3, 12, Math.abs(camZ - VOICE_Z + 2)), smooth(3, 12, Math.abs(camZ - PLANS_Z + 2)), smooth(0.4, 4, Math.abs(camZ)));
     const heroT = smooth(0.4, 9.2, camZ);
     const px = mouse.x * (0.5 + heroT * 0.6) * calm + Math.sin(time * 0.25) * 0.15 * calm * (1 - heroT);
     const py = -mouse.y * (0.35 + heroT * 0.25) * calm + Math.cos(time * 0.21) * 0.1 * calm * (1 - heroT);
@@ -350,7 +351,9 @@ async function start() {
     }
     tunnel.visible = camZ < 4 && camZ > -80;
     tunnelMat.uniforms.uTime.value = time;
-    flash.style.opacity = (Math.max(smooth(3, 0.7, camZ) * smooth(-5, -1.2, camZ), smooth(-63, -69.5, camZ) * smooth(-75, -71, camZ))).toFixed(3);
+    // dive: her black-hole mouth swallows the view, then the tunnel opens; white flash only at the tunnel exit
+    flash.style.opacity = (smooth(-63, -69.5, camZ) * smooth(-75, -71, camZ)).toFixed(3);
+    hole.style.opacity = (smooth(0.75, 0.2, camZ) * smooth(-5, -1.6, camZ)).toFixed(3);
 
     // floaters, cubes, mascots
     for (const m of floaters) {
