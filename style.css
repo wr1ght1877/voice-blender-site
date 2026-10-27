@@ -367,3 +367,15 @@ html.tour .tour-dots{display:block}
   .tour-dots button{width:16px;height:18px}
   .tour-dots button::before{width:7px;height:7px;margin:-3.5px 0 0 -3.5px;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
 }
+
+/* sound toggle (music starts on the first click/tap/key, or from this toggle) */
+.sound-toggle{position:fixed;right:16px;bottom:16px;z-index:60;display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:10px 16px;border-radius:999px;font:700 .95rem system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#fff;background:rgba(10,12,40,.82);border:1px solid rgba(255,255,255,.28);box-shadow:0 10px 30px rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer}
+.sound-toggle:hover{background:rgba(30,34,90,.92)}
+.st-icon{display:inline-flex;align-items:flex-end;gap:2px;height:16px}
+.st-icon i{display:block;width:3px;height:4px;border-radius:2px;background:rgba(255,255,255,.6)}
+.sound-toggle.on .st-icon i{background:linear-gradient(var(--magenta),var(--blue));animation:eq .9s ease-in-out infinite}
+.sound-toggle.on .st-icon i:nth-child(2){animation-delay:-.3s}.sound-toggle.on .st-icon i:nth-child(3){animation-delay:-.6s}.sound-toggle.on .st-icon i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:4px}50%{height:16px}}
+@media (max-width:640px){.sound-toggle{right:10px;bottom:10px;font-size:.85rem;padding:8px 14px;min-height:40px}}
+.music-credit{flex-basis:100%;font-size:.78rem;line-height:1.5;opacity:.8;overflow-wrap:anywhere}
+.music-credit a{color:inherit}
