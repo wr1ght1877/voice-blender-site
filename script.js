@@ -172,4 +172,19 @@
 
   if (root.classList.contains('plain')) heroWatchdog();
   else setTimeout(function () { if (!VB.tourReady && root.classList.contains('tour')) VB.toPlain('3D tour did not start'); }, 9000);
+
+  /* Pricing: billing period toggle (monthly / 3 / 6 / 12 months prepaid) */
+  var billBtns = document.querySelectorAll('.bill-toggle button');
+  function setTerm(t) {
+    Array.prototype.forEach.call(billBtns, function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-term') === t ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('#pricing .price[data-p1]'), function (el) {
+      el.innerHTML = '$' + el.getAttribute('data-p' + t) + '<span>' + (t === '1' ? '/mo' : t === '12' ? '/year' : ' for ' + t + ' mo') + '</span>';
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#pricing .bill[data-b1]'), function (el) {
+      el.textContent = el.getAttribute('data-b' + t);
+    });
+  }
+  Array.prototype.forEach.call(billBtns, function (b) {
+    b.addEventListener('click', function () { setTerm(b.getAttribute('data-term')); });
+  });
 })();

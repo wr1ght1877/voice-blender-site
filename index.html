@@ -191,21 +191,24 @@
         <div class="tc tc-head" data-z="-462" data-w="760" data-y="1.8" data-theme="light">
           <p class="tk">Pricing</p>
           <h2>Pick your band size.</h2>
+          <p>Monthly prices. Save up to 17% when you prepay.</p>
         </div>
         <div class="tc tc-plan" data-z="-492" data-plan="0" data-w="360" data-theme="light" style="--c:var(--cyan);--c2:var(--blue)">
           <h3>Yap</h3><p class="pr">Free</p><p class="for">One bot, queue only</p>
-          <ul><li><b>1</b> bot per call</li><li>Reply queue</li><li class="no">No voice mixing or turn-taking</li></ul>
+          <ul><li><b>1</b> bot per call</li><li><b>30</b> min a month, up to 10 a day</li><li>Reply queue</li><li class="no">No voice mixing or turn-taking</li><li class="no">No extra minutes: upgrade to keep talking</li></ul>
           <a class="pbtn" href="#waitlist" tabindex="-1">Join waitlist</a>
         </div>
         <div class="tc tc-plan featured" data-z="-492" data-plan="1" data-w="360" data-theme="light" style="--c:var(--magenta);--c2:var(--violet)">
           <span class="tag">Most popular</span>
-          <h3>Chorus</h3><p class="pr">$20<span>/mo</span></p><p class="for">Three bots, with the blender and turn-taking</p>
-          <ul><li>Up to <b>3</b> bots per call</li><li>Full voice blender: a separate voice per bot</li><li>Turn-taking mixer (pauses and pitch drops)</li></ul>
+          <h3>Chorus</h3><p class="pr">$24<span>/mo</span></p><p class="for">Three bots, with the blender and turn-taking</p>
+          <ul><li>Up to <b>3</b> bots per call</li><li><b>300</b> min a month included</li><li>Extra minutes 10¢/min, only if you turn them on</li><li>Full voice blender: a separate voice per bot</li><li>Turn-taking mixer (pauses and pitch drops)</li></ul>
+          <p class="pp">Prepay: $69 for 3 mo · $129 for 6 mo · $240 a year ($20/mo)</p>
           <a class="pbtn" href="#waitlist" tabindex="-1">Join waitlist</a>
         </div>
         <div class="tc tc-plan" data-z="-492" data-plan="2" data-w="360" data-theme="light" style="--c:var(--orange);--c2:var(--green)">
-          <h3>Symphony</h3><p class="pr">$50<span>/mo</span></p><p class="for">Up to 5 bots, priority queue, attribution proof</p>
-          <ul><li>Up to <b>5</b> bots per call</li><li>Everything in Chorus</li><li>Priority queue</li><li>Attribution and proof, such as OpenTimestamps stamping</li></ul>
+          <h3>Symphony</h3><p class="pr">$59<span>/mo</span></p><p class="for">Up to 5 of your own bots, priority queue, attribution proof</p>
+          <ul><li>Up to <b>5</b> of your own bots per call</li><li><b>400</b> min a month included</li><li>Extra minutes 15¢/min, only if you turn them on</li><li>Everything in Chorus</li><li>Priority queue</li><li>Attribution and proof, such as OpenTimestamps stamping</li></ul>
+          <p class="pp">Prepay: $168 for 3 mo · $318 for 6 mo · $590 a year (about $49/mo)</p>
           <a class="pbtn" href="#waitlist" tabindex="-1">Join waitlist</a>
         </div>
 
@@ -426,18 +429,28 @@
         <div class="head reveal center">
           <p class="kicker">Pricing</p>
           <h2 id="pricing-title">Pick your band size.</h2>
+          <p class="lede">Save up to 17% when you prepay.</p>
+        </div>
+        <div class="bill-toggle reveal" role="group" aria-label="Billing period">
+          <button type="button" data-term="1" aria-pressed="true">Monthly</button>
+          <button type="button" data-term="3" aria-pressed="false">3 mo</button>
+          <button type="button" data-term="6" aria-pressed="false">6 mo</button>
+          <button type="button" data-term="12" aria-pressed="false">12 mo <span>save 17%</span></button>
         </div>
         <div class="plans">
           <article class="plan glass tilt reveal" data-tilt style="--c:var(--cyan);--c2:var(--blue)" aria-labelledby="p-yap">
             <div class="plan-top layer" style="--z:40px">
               <h3 id="p-yap">Yap</h3>
               <p class="price">Free</p>
+              <p class="bill">Always free</p>
               <p class="for">One bot, queue only</p>
             </div>
             <ul class="layer" style="--z:25px">
               <li><b>1</b> bot per call</li>
+              <li><b>30</b> min a month, up to 10 a day</li>
               <li>Reply queue</li>
               <li class="no">No voice mixing or turn-taking</li>
+              <li class="no">No extra minutes: upgrade to keep talking</li>
             </ul>
             <a class="btn plan-btn layer" style="--z:35px" href="#waitlist">Join waitlist</a>
           </article>
@@ -445,11 +458,14 @@
             <span class="tag layer" style="--z:70px">Most popular</span>
             <div class="plan-top layer" style="--z:40px">
               <h3 id="p-chorus">Chorus</h3>
-              <p class="price">$20<span>/mo</span></p>
+              <p class="price" data-p1="24" data-p3="69" data-p6="129" data-p12="240">$24<span>/mo</span></p>
+              <p class="bill" data-b1="Billed monthly" data-b3="$23/mo, save 4%" data-b6="$21.50/mo, save 10%" data-b12="$20/mo, save 17%">Billed monthly</p>
               <p class="for">Three bots, with the blender and turn-taking</p>
             </div>
             <ul class="layer" style="--z:25px">
               <li>Up to <b>3</b> bots per call</li>
+              <li><b>300</b> min a month included</li>
+              <li>Extra minutes 10¢/min, only if you turn them on</li>
               <li>Full voice blender: a separate voice per bot</li>
               <li>Turn-taking mixer (pauses and pitch drops)</li>
             </ul>
@@ -458,11 +474,14 @@
           <article class="plan glass tilt reveal" data-tilt style="--c:var(--orange);--c2:var(--green)" aria-labelledby="p-symphony">
             <div class="plan-top layer" style="--z:40px">
               <h3 id="p-symphony">Symphony</h3>
-              <p class="price">$50<span>/mo</span></p>
-              <p class="for">Up to 5 bots, priority queue, attribution proof</p>
+              <p class="price" data-p1="59" data-p3="168" data-p6="318" data-p12="590">$59<span>/mo</span></p>
+              <p class="bill" data-b1="Billed monthly" data-b3="$56/mo, save 5%" data-b6="$53/mo, save 10%" data-b12="About $49/mo, save 17%">Billed monthly</p>
+              <p class="for">Up to 5 of your own bots, priority queue, attribution proof</p>
             </div>
             <ul class="layer" style="--z:25px">
-              <li>Up to <b>5</b> bots per call</li>
+              <li>Up to <b>5</b> of your own bots per call</li>
+              <li><b>400</b> min a month included</li>
+              <li>Extra minutes 15¢/min, only if you turn them on</li>
               <li>Everything in Chorus</li>
               <li>Priority queue</li>
               <li>Attribution and proof, such as OpenTimestamps stamping</li>
@@ -475,14 +494,18 @@
           <table>
             <thead><tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Yap</th><th scope="col">Chorus</th><th scope="col">Symphony</th></tr></thead>
             <tbody>
-              <tr><th scope="row">Price</th><td>Free</td><td>$20/mo</td><td>$50/mo</td></tr>
-              <tr><th scope="row">Bots per call</th><td>1</td><td>Up to 3</td><td>Up to 5</td></tr>
+              <tr><th scope="row">Monthly price</th><td>Free</td><td>$24/mo</td><td>$59/mo</td></tr>
+              <tr><th scope="row">Prepay 3 / 6 / 12 mo</th><td><span aria-label="Not applicable">—</span></td><td>$69 / $129 / $240</td><td>$168 / $318 / $590</td></tr>
+              <tr><th scope="row">Bots per call</th><td>1</td><td>Up to 3</td><td>Up to 5 of your own</td></tr>
+              <tr><th scope="row">Minutes included</th><td>30/mo (10/day max)</td><td>300/mo</td><td>400/mo</td></tr>
+              <tr><th scope="row">Extra minutes (opt-in)</th><td><span aria-label="Not available">—</span></td><td>10¢/min</td><td>15¢/min</td></tr>
               <tr><th scope="row">Queue</th><td>Standard</td><td>Standard</td><td>Priority</td></tr>
               <tr><th scope="row">Voice blender + turn-taking</th><td><span aria-label="Not included">—</span></td><td><span class="yes" aria-label="Included">✓</span></td><td><span class="yes" aria-label="Included">✓</span></td></tr>
               <tr><th scope="row">Attribution proof</th><td><span aria-label="Not included">—</span></td><td><span aria-label="Not included">—</span></td><td><span class="yes" aria-label="Included">✓</span></td></tr>
             </tbody>
           </table>
         </div>
+        <p class="fine reveal">Minutes reset each month and don’t roll over. Extra minutes stay off unless you turn them on and set your own spending limit; otherwise calls stop at your plan’s limit, so there are no surprise bills. You’ll get a heads-up at 80%.</p>
       </div>
     </section>
 
@@ -512,7 +535,15 @@
           </details>
           <details class="glass">
             <summary>How many bots can join one call?</summary>
-            <p>It depends on the plan: one bot on Yap, up to three on Chorus, and up to five on Symphony.</p>
+            <p>It depends on the plan: one bot on Yap, up to three on Chorus, and up to five of your own bots on Symphony.</p>
+          </details>
+          <details class="glass">
+            <summary>How do minutes work?</summary>
+            <p>Each plan includes call minutes every month: 30 on Yap (up to 10 a day), 300 on Chorus and 400 on Symphony. Minutes reset monthly and don’t roll over. You’ll get a heads-up at 80%. When you hit the limit, the call stops, unless you’ve turned on extra minutes (10¢/min on Chorus, 15¢/min on Symphony) and set your own spending limit. No surprise bills. Yap has no extra minutes; upgrade to keep talking.</p>
+          </details>
+          <details class="glass">
+            <summary>Can I save by paying ahead?</summary>
+            <p>Yes. Chorus is $24 a month, or $69 for 3 months, $129 for 6 months or $240 for a year ($20 a month). Symphony is $59 a month, or $168 for 3 months, $318 for 6 months or $590 for a year (about $49 a month). That’s up to 17% off.</p>
           </details>
           <details class="glass">
             <summary>Can I use it today?</summary>

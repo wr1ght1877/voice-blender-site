@@ -194,6 +194,14 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;background:
 .plan-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
 .featured .plan-btn{background:linear-gradient(90deg,var(--magenta),var(--violet))}
 .tag{position:absolute;top:-14px;left:50%;margin-left:-62px;width:124px;text-align:center;background:linear-gradient(90deg,var(--magenta),var(--orange));color:#fff;font-size:.78rem;font-weight:800;padding:5px 0;border-radius:999px;box-shadow:0 8px 20px rgba(255,61,200,.5)}
+.bill-toggle{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;width:max-content;max-width:100%;margin:-10px auto 30px;padding:6px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-b)}
+.bill-toggle button{font:inherit;font-weight:800;font-size:.92rem;color:var(--muted);background:transparent;border:0;border-radius:999px;padding:9px 16px;cursor:pointer;transition:background .2s,color .2s}
+.bill-toggle button:hover{color:#fff}
+.bill-toggle button[aria-pressed="true"]{color:#fff;background:linear-gradient(90deg,var(--magenta),var(--violet));box-shadow:0 6px 18px rgba(255,61,200,.35)}
+.bill-toggle button span{font-size:.72rem;font-weight:800;margin-left:4px;padding:2px 7px;border-radius:999px;background:rgba(46,232,111,.2);color:#8ff5b2}
+.bill-toggle button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.bill{margin:0 0 8px;font-size:.9rem;font-weight:700;color:var(--muted)}
+.fine{margin:18px auto 0;max-width:760px;text-align:center;color:var(--muted);font-size:.92rem}
 .compare{margin-top:30px;overflow-x:auto;padding:6px 10px}
 .compare table{width:100%;border-collapse:collapse;min-width:520px}
 .compare th,.compare td{padding:13px 12px;text-align:center;border-bottom:1px solid var(--line);color:#e4e9ff}
@@ -240,6 +248,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;background:
   .plan.featured,.js .plan.featured.reveal.in{transform:none}
 }
 @media (max-width:640px){
+  .bill-toggle{gap:2px;padding:4px}.bill-toggle button{padding:8px 11px;font-size:.85rem}
   body{font-size:16px}
   .steps,.feat-grid,.use-grid{grid-template-columns:1fr}
   .bots{grid-template-columns:repeat(2,1fr);gap:12px}
@@ -339,6 +348,7 @@ html.tour .plain-only{position:absolute!important;width:1px!important;height:1px
 .tc-plan li{position:relative;padding-left:26px;font-size:16px}
 .tc-plan li::before{content:"✓";position:absolute;left:0;top:0;font-weight:900}
 .tc-plan li.no{opacity:.75}.tc-plan li.no::before{content:"–"}
+.tc-plan .pp{margin:-6px 0 16px;font-size:14px;font-weight:700;line-height:1.35;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.18)}
 .tc-plan .pbtn{display:block;text-align:center;padding:12px;border-radius:999px;background:rgba(255,255,255,.25);font-weight:800;color:#fff;text-decoration:none;pointer-events:auto;cursor:pointer}
 .tc-plan .pbtn:hover{background:rgba(255,255,255,.4)}
 .tc-plan .tag{position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:auto;margin:0;padding:6px 16px;white-space:nowrap;background:#fff;color:#c2189a;font-size:14px;font-weight:900;border-radius:999px;box-shadow:0 10px 24px rgba(255,61,200,.45)}
