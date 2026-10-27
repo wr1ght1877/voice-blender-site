@@ -12,6 +12,5 @@ Static site, no build step, hosted on GitHub Pages:
 - `vortex2d.js` — 2D canvas hero, used when WebGL isn't available
 - `mascots.js` — shared bot colors and flat mascot drawing
 - `script.js` — nav, mobile menu, scroll reveal, tilt, parallax, call illustration
-- `sound.js` — high-energy 140 BPM rave beat, synthesized live with Web Audio (starts on the first click, tap or key press, or from the Sound toggle; mute is remembered)
 
 Follow [@VoiceBlender](https://x.com/VoiceBlender).
