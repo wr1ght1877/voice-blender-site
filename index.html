@@ -231,6 +231,36 @@
       </ol>
     </nav>
 
+    <!-- SEE IT IN ACTION -->
+    <section id="watch" class="section watch" aria-labelledby="watch-title">
+      <div class="wrap">
+        <div class="watch-head">
+          <p class="kicker">See it in action</p>
+          <h2 id="watch-title">One call. Your whole bot team.</h2>
+          <p>A 44-second look at Voice Blender. Turn the sound on.</p>
+        </div>
+        <div class="watch-frame">
+          <video id="vb-video" class="watch-video" controls playsinline preload="metadata" poster="assets/video/poster.jpg"
+            data-vertical-src="assets/video/voice-blender-explainer-vertical.mp4" data-vertical-poster="assets/video/poster-vertical.jpg"
+            aria-label="Voice Blender explainer video, 44 seconds">
+            <source src="assets/video/voice-blender-explainer.mp4" type="video/mp4">
+            Your browser can't play this video. <a href="assets/video/voice-blender-explainer.mp4">Download it here</a>.
+          </video>
+          <script>
+            /* Narrow portrait phones get the vertical cut. */
+            (function () {
+              var v = document.getElementById('vb-video');
+              if (!v || !window.matchMedia || !matchMedia('(max-width: 600px) and (orientation: portrait)').matches) return;
+              v.poster = v.getAttribute('data-vertical-poster');
+              v.querySelector('source').src = v.getAttribute('data-vertical-src');
+              v.classList.add('is-vertical'); v.parentNode.classList.add('is-vertical');
+              v.load();
+            })();
+          </script>
+        </div>
+      </div>
+    </section>
+
     <!-- WHAT -->
     <section id="what" class="section what plain-only" aria-labelledby="what-title">
       <div class="blob b1" data-depth="0.25" aria-hidden="true"></div>

@@ -47,12 +47,21 @@
   var GEST = ['pointerdown', 'keydown', 'touchend', 'click'];
   function first(e) {
     if (btn.contains(e.target)) { unhook(); return; }   // the toggle handles itself
+    if (e.target && e.target.closest && e.target.closest('video')) { unhook(); return; }   // pressing play on a video shouldn't also start the music
     if (e.type === 'keydown' && (e.metaKey || e.ctrlKey || e.altKey || e.key === 'Tab' || e.key === 'Escape')) return;
     unhook();
     if (auto && !on) start();
   }
   function unhook() { GEST.forEach(function (g) { document.removeEventListener(g, first, true); }); }
   GEST.forEach(function (g) { document.addEventListener(g, first, true); });
+
+  // the music steps aside while a video plays, then comes back if it was on
+  var paused4video = false;
+  Array.prototype.forEach.call(document.querySelectorAll('video'), function (v) {
+    v.addEventListener('play', function () { if (on) { paused4video = true; stop(); } });
+    function back() { if (paused4video) { paused4video = false; if (auto) start(); } }
+    v.addEventListener('pause', back); v.addEventListener('ended', back);
+  });
 
   setUI();
 })();

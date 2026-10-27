@@ -416,3 +416,12 @@ html.tour .tour-dots{display:block}
 .wl-share input{font-size:14px}
 .wl-form[hidden],.wl-done[hidden]{display:none!important}
 .wait-card p.wl-lead{margin:0 auto 6px;font-size:1.05rem;color:#ffd166}
+
+/* See it in action (explainer video) */
+.watch{padding-top:clamp(56px,8vw,96px);padding-bottom:clamp(56px,8vw,96px)}
+.watch-head{text-align:center;max-width:640px;margin:0 auto 28px}
+.watch-head p:not(.kicker){margin:0}
+.watch-frame{position:relative;max-width:1000px;margin:0 auto;border-radius:22px;overflow:hidden;background:#05060f;border:1px solid var(--glass-b);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 60px rgba(120,150,255,.18)}
+.watch-video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#05060f}
+.watch-frame.is-vertical{max-width:min(420px,100%,calc(78vh * 9 / 16))}
+.watch-video.is-vertical{aspect-ratio:9/16}
