@@ -569,10 +569,33 @@
             <canvas class="mascot" data-bot="4" width="56" height="56"></canvas>
           </div>
           <h2 id="wait-title" class="layer" style="--z:40px">Join the waitlist</h2>
-          <p class="layer" style="--z:25px">The waitlist opens soon. Follow <a href="https://x.com/VoiceBlender" rel="noopener">@VoiceBlender</a> on X to hear first.</p>
-          <div class="ctas layer" style="--z:35px">
-            <button class="btn primary" type="button" disabled aria-disabled="true">Waitlist opening soon</button>
-            <a class="btn glass" href="https://x.com/VoiceBlender" rel="noopener">Follow on X</a>
+          <p class="layer" style="--z:25px">Get early access when Voice Blender opens. Free to join, no card needed.</p>
+          <form id="wl-form" class="wl-form layer" style="--z:35px" novalidate>
+            <div class="wl-fields">
+              <label class="wl-label" for="wl-email">Email</label>
+              <input id="wl-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required maxlength="254">
+              <label class="wl-label" for="wl-name">First name (optional)</label>
+              <input id="wl-name" name="name" type="text" autocomplete="given-name" placeholder="First name (optional)" maxlength="60">
+            </div>
+            <div class="wl-hp" aria-hidden="true">
+              <label for="wl-website">Website</label>
+              <input id="wl-website" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <div id="wl-turnstile" class="wl-turnstile"></div>
+            <button class="btn primary wl-submit" type="submit">Join waitlist</button>
+            <p class="wl-msg" id="wl-msg" role="status" aria-live="polite"></p>
+            <p class="wl-fine">Refer a friend: each friend who joins with your link moves you up the list, and when they become a paying customer after launch, you get a free month. We'll only email you about Voice Blender.</p>
+          </form>
+          <div id="wl-done" class="wl-done layer" style="--z:35px" hidden>
+            <p class="wl-pos"><span id="wl-hello">You're on the list!</span> You're <strong>#<span id="wl-position">1</span></strong> of <span id="wl-total">1</span>.</p>
+            <p class="wl-refs">Friends who joined with your link: <strong id="wl-refcount">0</strong></p>
+            <label class="wl-label-show" for="wl-link">Your referral link</label>
+            <div class="wl-share">
+              <input id="wl-link" type="text" readonly>
+              <button class="btn glass" type="button" id="wl-copy">Copy</button>
+            </div>
+            <p class="wl-fine">Each friend who joins with your link moves you up the list. When a friend you referred becomes a paying customer after launch, you get a free month of your plan.</p>
+            <p class="wl-fine"><a href="#waitlist" id="wl-reset">Not you? Use a different email</a> · <a href="https://x.com/VoiceBlender" rel="noopener">Follow @VoiceBlender on X</a></p>
           </div>
         </div>
       </div>
@@ -595,6 +618,7 @@
   <script src="vortex2d.js"></script>
   <script src="script.js"></script>
   <script src="sound.js"></script>
+  <script src="waitlist.js"></script>
   <script type="module" src="hero3d.js"></script>
   <script type="module" src="tour.js"></script>
 </body>

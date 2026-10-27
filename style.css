@@ -389,3 +389,22 @@ html.tour .tour-dots{display:block}
 @media (max-width:640px){.sound-toggle{right:10px;bottom:10px;font-size:.85rem;padding:8px 14px;min-height:40px}}
 .music-credit{flex-basis:100%;font-size:.78rem;line-height:1.5;opacity:.8;overflow-wrap:anywhere}
 .music-credit a{color:inherit}
+/* waitlist form */
+.wl-form{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.wl-fields{display:flex;flex-direction:column;gap:10px}
+.wl-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wl-form input,.wl-share input{width:100%;box-sizing:border-box;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.25);background:rgba(10,8,30,.55);color:#fff;font:inherit;font-size:16px}
+.wl-form input:focus,.wl-share input:focus{outline:2px solid #9fc4ff;outline-offset:2px}
+.wl-hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+.wl-turnstile:empty{display:none}
+.wl-turnstile{display:flex;justify-content:center}
+.wl-submit[disabled]{opacity:.6;cursor:progress}
+.wait-card p.wl-msg{min-height:1.2em;margin:0;font-weight:600;color:#ffd166}
+.wait-card p.wl-fine{font-size:.85rem;opacity:.8;margin:8px auto 0}
+.wl-done{max-width:480px;margin:0 auto}
+.wait-card .wl-pos{font-size:1.25rem;margin-bottom:6px}
+.wait-card .wl-refs{margin-bottom:14px}
+.wl-label-show{display:block;font-size:.85rem;opacity:.8;margin-bottom:6px}
+.wl-share{display:flex;gap:8px}
+.wl-share input{font-size:14px}
+.wl-form[hidden],.wl-done[hidden]{display:none!important}
